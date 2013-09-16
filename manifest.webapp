@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "name": "ChatFox",
+  "description": "A simple chat",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Mario Pierre-Louis Marín",
+    "url": "https://github.com/mariopl/ChatFox"
+  },
+  "installs_allowed_from": ["*"],
+  "default_locale": "en",
+  "permissions": {
+    "push": {},
+    "desktop-notification": {}
+  },
+  "messages": [
+    { "push": "/index.html" },
+    { "push-register": "/index.html" }
+  ]
+}

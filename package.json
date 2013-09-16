@@ -1,0 +1,21 @@
+{
+  "name": "ChatFox",
+  "description": "A simple chat application",
+  "version": "0.0.2",
+  "author": "Mario Pierre-Louis Marín",
+  "dependencies": {
+    "socket.io": "*",
+    "node-static": "*",
+    "socket.io-client": "*",
+    "mongoose":"*",
+    "express":"*",
+    "uglify-js": "*"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "start": "/server.js"
+  }
+}
+

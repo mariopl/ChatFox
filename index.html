@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="/css/index.css" rel="stylesheet"/>
+    <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
+    <script src="http://localhost:8443/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript" src="/js/push.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+  </head>
+  <body>
+   <h1>ChatFox</h1>
+   <div id="chat">
+      <div id="nickname">
+        <form class="wrap" id="set-nickname">
+          <label for="nick">Introduce tu nombre y pulsa intro</label>
+          <input id="nick" name="nick" type="text" placeholder="nickname" />
+          <p id="nickname-err">Alias ya en uso</p>
+        </form>
+      </div>
+      <div id="connecting">
+        <div class="wrap">Conectando...</div>
+      </div>
+      <div id="messages">
+        <div id="nicknames"></div>
+        <div id="lines"></div>
+      </div>
+      <form id="send-message">
+        <input id="message" type="text"/>
+        <button value="">Enviar</button>
+      </form>
+  </body>
+</html>
