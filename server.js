@@ -10,7 +10,6 @@
 
   var file = new static.Server(path.join(__dirname,'/'));
   
-  //The version value would be better from the database
   server = 'http://localhost:8443'
 
   function handler(req, res) {
@@ -40,6 +39,7 @@
 
     var new_user = new db.User({nick: socket.nickname, msg: msg, version: new Date().getTime()});
     new_user.save();
+    this.log.debug('>>>>message sent from ' + socket.nickname);
 
       socket.broadcast.emit('user message', socket.nickname, msg);
     });
@@ -64,6 +64,7 @@
         }
       
     });
+    this.log.debug('>>>>New user saved');
 
     socket.on('disconnect', function (nick) {
 

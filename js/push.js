@@ -10,6 +10,7 @@ var Push = (function() {
 	req.onsuccess = function(e) {
 	  var endpoint = req.result;
 	    debug("New endpoint: " + endpoint );
+      this.log.debug('>>>>New endpoint: '+ endpoint);
 	}
 	
 	req.onerror = function(e) {
