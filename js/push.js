@@ -10,6 +10,7 @@ var Push = (function() {
 	req.onsuccess = function(e) {
 	  var endpoint = req.result;
 	    debug("New endpoint: " + endpoint );
+      this.log.debug('>>>>New endpoint: '+ endpoint);
 	}
 	
 	req.onerror = function(e) {
@@ -29,7 +30,7 @@ var Push = (function() {
   function sendPushTo(endpoint) {
     // We can do this even if the platform doesn't support push. We cannot receive
     // but we can still send notifications...
-    Utils.sendXHR('PUT', endPoint, "version=" + version);
+    Utils.sendXHR('PUT', server, endpoint);
   }
 
   return {
@@ -38,7 +39,3 @@ var Push = (function() {
   }
 
 });
-
-}
-
-
