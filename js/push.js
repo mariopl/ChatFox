@@ -10,27 +10,26 @@ var Push = (function() {
 	req.onsuccess = function(e) {
 	  var endpoint = req.result;
 	    debug("New endpoint: " + endpoint );
-      this.log.debug('>>>>New endpoint: '+ endpoint);
 	}
 	
 	req.onerror = function(e) {
      debug("Error getting a new endpoint: " + JSON.stringify(e));
     }
-  } else {
-	  // No push on the DOM
-  }
+  } 
   
-  //4.Add a message handler for push notifications inside your app
-  function setPushHandler(aHandler) {
-    if (pushEnabled && window.navigator.mozSetMessageHandler) {
-      window.navigator.mozSetMessageHandler('push', aHandler);
-    } // Else?...
-  }
+  // Listen to push notifications
+  window.navigator.mozSetMessageHandler('push', function onPush(version) {
+    var channel = [] //an array of all endpoints or extract it from the database in other case;
+    var version = //the last version value of the database;
+//  for (channel i = channel.length; i >= 0; i--) {
+      //for each endpoint, if its version is lower we sent it a notification
+    Notifications.notify();
+  });
 
   function sendPushTo(endpoint) {
     // We can do this even if the platform doesn't support push. We cannot receive
     // but we can still send notifications...
-    Utils.sendXHR('PUT', endPoint, "version=" + version);
+    Utils.sendXHR('PUT',endpoint, "version=" + new Date().getTime());
   }
 
   return {
@@ -39,7 +38,3 @@ var Push = (function() {
   }
 
 });
-
-}
-
-

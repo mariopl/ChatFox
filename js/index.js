@@ -7,16 +7,15 @@
       navigator.mozApps
         .install('http://localhost:8443/manifest.webapp');
     }
-    var notification = navigator.mozNotification.createNotification("ChatFox",
-       "We are working for your notifications");
-              notification.show();
   }
   });
 
-  function processNotification(endpoint) {
-    var notification = window.navigator.mozNotification.createNotification('ChatFox', 'You have new messages');
-    notification.show();
-  }
+  var Notifications = function notify() {
+
+  var notify = navigator.mozNotification.createNotification("ChatFox",
+       "You have a new message");
+              notification.show();
+  };
   //
   // socket.io code
   //

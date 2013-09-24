@@ -6,10 +6,7 @@
   "dependencies": {
     "socket.io": "*",
     "node-static": "*",
-    "socket.io-client": "*",
-    "mongoose":"*",
-    "express":"*",
-    "uglify-js": "*"
+    "mongoose":"*"
   },
   "engines": {
     "node": "*"

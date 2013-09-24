@@ -4,6 +4,7 @@
     sio = require('socket.io'),
     static = require('node-static');
     db = require('./js/db.js');
+    push = require('./js/push.js');
 
   var app = require('http').createServer(handler);
   app.listen(8443);
@@ -14,6 +15,10 @@
 
   function handler(req, res) {
     file.serve(req, res);
+  }
+
+  function saveEndpoint() {
+  //Utils.sendXHR('GET',,);
   }
 
   var io = sio.listen(app),
@@ -39,8 +44,7 @@
 
     var new_user = new db.User({nick: socket.nickname, msg: msg, version: new Date().getTime()});
     new_user.save();
-    this.log.debug('>>>>message sent from ' + socket.nickname);
-
+    this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
       socket.broadcast.emit('user message', socket.nickname, msg);
     });
 
@@ -64,7 +68,7 @@
         }
       
     });
-    this.log.debug('>>>>New user saved');
+    this.log.debug('>>>>NEW USER SAVED');
 
     socket.on('disconnect', function (nick) {
 
@@ -95,14 +99,6 @@
     });
     });
   });
-
-  //3.Send the endpoint to your server
-  function sendEndpointToServer(endpoint) {
-    var dataToSend = 'endpoint=' + endpoint;
-    debug ("Sending " + dataToSend + "to " + server);
-    if (server)
-      Utils.sendXHR("PUT", server, dataToSend);
-  }
 
   //5.Send a notification from your server
   function processNotification(endpoint) {
