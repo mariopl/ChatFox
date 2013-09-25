@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.71:8443/manifest.webapp');
     }
   }
   });
@@ -16,10 +16,14 @@
        "You have a new message");
               notification.show();
   };
+  
+  alert('antes');
+  Push();
+  alert('despues');
   //
   // socket.io code
   //
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.71:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');

@@ -16,6 +16,6 @@ var Utils = (function() {
   };
   xhr.send(data);
   }
-};
+});
 
 
