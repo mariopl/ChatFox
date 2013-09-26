@@ -48,6 +48,15 @@
       socket.broadcast.emit('user message', socket.nickname, msg);
     });
 
+
+    socket.on('user endpoint', function(envioTest){
+    
+      var new_user = new db.User({endpoint : envioTest});
+      
+      new_user.save();
+      this.log.debug('ENPOINT SAVED');  
+    });
+
     socket.on('nickname', function (nick, fn) {
 
       var new_user = new db.User({nick: nick});

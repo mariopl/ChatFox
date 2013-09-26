@@ -24,7 +24,8 @@ Set-up schema
 var UserSchema = new Schema({
 	version    : { type: Number, index: true},
     nick       : { type: String, index: true, unique: false },
-    msg        : { type: String, index: true}
+    msg        : { type: String, index: true},
+    endpoint   : { type: String, index: true}
 });
 
 var MessageSchema = new Schema({

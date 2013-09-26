@@ -19,6 +19,7 @@
   
   alert('antes');
   Push();
+  endpointFalso = 'httpFalso';
   alert('despues');
   //
   // socket.io code
@@ -63,6 +64,7 @@
   //
   $(function () {
     $('#set-nickname').submit(function (ev) {
+      //socket.emit('user endpoint', endpointFalso);
       socket.emit('nickname', $('#nick').val(), function (set) {
         if (!set) {
           clear();

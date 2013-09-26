@@ -10,13 +10,15 @@ var Push = (function() {
     	
     	req.onsuccess = function(e) {
     	  var endpoint = req.result;
+        var socket = io.connect('http://192.168.1.71:8443');
+        socket.emit('user endpoint', endpoint); 
     	}
     	
     	req.onerror = function(e) {
          alert("Error getting a new endpoint: " + JSON.stringify(e));
-        }
+      }
     }
-   
+       
 /*
   // Listen to push notifications
   window.navigator.mozSetMessageHandler('push', function onPush(version) {
@@ -39,5 +41,4 @@ var Push = (function() {
 	  //sendPushTo: sendPushTo,
  
   }
-
 });
