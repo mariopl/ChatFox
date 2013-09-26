@@ -4,10 +4,9 @@ and register in push server
 */
 var Push = (function() {	
   //Now we call push.register() to request an endpoint
-    alert('dentro');
+    alert('en push.js');
     if (navigator.push) {
     	var req = navigator.push.register();
-      alert('Hola');
     	
     	req.onsuccess = function(e) {
     	  var endpoint = req.result;
