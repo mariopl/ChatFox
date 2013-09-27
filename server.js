@@ -17,12 +17,11 @@
     file.serve(req, res);
   }
 
-  function saveEndpoint() {
-  //Utils.sendXHR('GET',,);
-  }
+  endpointTest = 1234
 
   var io = sio.listen(app),
     nicknames = {},
+    endpoints = {},
     recent_messages = [];
 
   io.sockets.on('connection', function (socket) {
@@ -49,18 +48,15 @@
     });
 
 
-    socket.on('user endpoint', function(envioTest){
-    
-      var new_user = new db.User({endpoint : envioTest});
-      
-      new_user.save();
-      this.log.debug('ENPOINT SAVED');  
+    socket.on('user endpoint', function(endpoint){
+      this.log.debug('ENPOINT SAVED  ' + endpoint);
+      endpoints[endpoint] = socket.endpoint = endpoint;
     });
 
+
     socket.on('nickname', function (nick, fn) {
-
-      var new_user = new db.User({nick: nick});
-
+      
+      var new_user = new db.User({nick: nick, endpoint: socket.endpoint});
 
       new_user.save(function(err) {
 
@@ -77,6 +73,7 @@
         }
       
     });
+
     this.log.debug('>>>>NEW USER SAVED');
 
     socket.on('disconnect', function (nick) {

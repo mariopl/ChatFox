@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.71:8443/manifest.webapp');
+        .install('http://192.168.1.102:8443/manifest.webapp');
     }
   }
   });
@@ -19,12 +19,11 @@
   
   alert('antes');
   Push();
-  endpointFalso = 'httpFalso';
   alert('despues');
   //
   // socket.io code
   //
-  var socket = io.connect('http://192.168.1.71:8443');
+  var socket = io.connect('http://192.168.1.102:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');

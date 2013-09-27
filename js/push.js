@@ -10,7 +10,7 @@ var Push = (function() {
     	
     	req.onsuccess = function(e) {
     	  var endpoint = req.result;
-        var socket = io.connect('http://192.168.1.71:8443');
+        var socket = io.connect('http://192.168.1.102:8443');
         socket.emit('user endpoint', endpoint); 
     	}
     	
