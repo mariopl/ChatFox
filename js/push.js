@@ -4,20 +4,31 @@ and register in push server
 */
 var Push = (function() {	
   //Now we call push.register() to request an endpoint
-    alert('en push.js');
+  var endpoint = localStorage.endpoint || null;
+
+  if(!endpoint){
     if (navigator.push) {
     	var req = navigator.push.register();
     	
     	req.onsuccess = function(e) {
-    	  var endpoint = req.result;
-        var socket = io.connect('http://192.168.1.102:8443');
+    	  var endpoint = localStorage.endpoint = req.result;
+        var socket = io.connect('http://localhost:8443');
         socket.emit('user endpoint', endpoint); 
     	}
     	
     	req.onerror = function(e) {
          alert("Error getting a new endpoint: " + JSON.stringify(e));
       }
-    }
+    } 
+  } else {
+
+    var socket = io.connect('http://localhost:8443');
+        socket.emit('user endpoint', endpoint); 
+  }
+
+  //alert('Tu endpoint es: ' + endpoint); 
+
+
        
 /*
   // Listen to push notifications

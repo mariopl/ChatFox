@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.102:8443/manifest.webapp');
+        .install('http://localhost:8443/manifest.webapp');
     }
   }
   });
@@ -17,13 +17,26 @@
               notification.show();
   };
   
-  alert('antes');
   Push();
-  alert('despues');
+
   //
   // socket.io code
   //
-  var socket = io.connect('http://192.168.1.102:8443');
+  var endpoint = localStorage.endpoint;
+  var endpointButton = null;
+
+  $(function init() {
+
+    endpointButton = document.getElementById("endpoint");
+    endpointButton.addEventListener('click',endpointClick);
+
+  });
+
+  function endpointClick(){
+    alert('Tu endpoint es: ' + endpoint);
+  }
+
+  var socket = io.connect('http://localhost:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -85,4 +98,5 @@
     function clear () {
       $('#message').val('').focus();
     };
+
   });
