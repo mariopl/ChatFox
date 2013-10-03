@@ -5,13 +5,14 @@
     static = require('node-static');
     db = require('./js/db.js');
     push = require('./js/push.js');
+    request = require('request');
 
   var app = require('http').createServer(handler);
   app.listen(8443);
 
   var file = new static.Server(path.join(__dirname,'/'));
   
-  server = 'http://localhost:8443'
+  server = 'http://192.168.1.71:8443'
 
   function handler(req, res) {
     file.serve(req, res);
@@ -41,12 +42,36 @@
 
     this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
       socket.broadcast.emit('user message', socket.nickname, msg);
+      //desde aquí despertamos a a través de los endpoints
+      for (var i = 0; i < endpoints.length ; i++) {
+            
+        request.put({
+          url:     endpoints[i],
+          body:    "version=" + new Date().getTime()
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+              console.log(body)
+            }
+            });
+
+        this.log.debug('Waking up ' + endpoints[i]);
+
+      }
     });
 
+      socket.on('user endpoint', function(endpoint){
+      //endpoints[endpoint] = socket.endpoint = endpoint;
+      socket.endpoint = endpoint;
+      endpoints.push(endpoint);
+      this.log.debug(endpoints);
+      this.log.debug(endpoints.length);
+      function eliminateDuplicates(endpoints) {
 
-    socket.on('user endpoint', function(endpoint){
-      endpoints[endpoint] = socket.endpoint = endpoint;
-    });
+        this.log.debug('eliminateDuplicates');
+      }
+    
+      
+      });
 
 
     socket.on('nickname', function (nick, fn) {
@@ -98,15 +123,3 @@
     });
     });
   });
-
-  //5.Send a notification from your server
-  function processNotification(endpoint) {
-
-      var notification = window.navigator.mozNotification.createNotification("ChatFox", "You have new messages");
-      
-        notification.show();
-  } 
-  
-
-
-

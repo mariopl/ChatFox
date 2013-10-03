@@ -6,7 +6,8 @@
   "dependencies": {
     "socket.io": "*",
     "node-static": "*",
-    "mongoose":"*"
+    "mongoose":"*",
+    "request": "*"
   },
   "engines": {
     "node": "*"
