@@ -12,7 +12,7 @@
 
   var file = new static.Server(path.join(__dirname,'/'));
   
-  server = 'http://192.168.1.37:8443'
+  server = 'http://localhost:8443'
 
   function handler(req, res) {
     file.serve(req, res);

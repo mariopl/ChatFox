@@ -12,7 +12,7 @@ var Push = (function() {
     	
     	req.onsuccess = function(e) {
     	  var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://192.168.1.37:8443');
+        var socket = io.connect('http://localhost:8443');
         socket.emit('user endpoint', endpoint); 
     	}
     	
@@ -23,30 +23,18 @@ var Push = (function() {
   } else {
 
     var endpoint = localStorage.endpoint;
-    var socket = io.connect('http://192.168.1.37:8443');
+    var socket = io.connect('http://localhost:8443');
         socket.emit('user endpoint', endpoint); 
   }
 
   //Listen to push notifications
   if (navigator.push) {
-  window.navigator.mozSetMessageHandler('push', function() {
+    window.navigator.mozSetMessageHandler('push', function() {
     
-    var notification = navigator.mozNotification.createNotification("ChatFox", "Notification1");
+      var notification = navigator.mozNotification.createNotification("ChatFox", "Nuevo mensaje de chat");
     
-    notification.show();
-  });
-}
-
-/*
-  function sendPushTo(endpoint) {
-    // We can do this even if the platform doesn't support push. We cannot receive
-    // but we can still send notifications...
-    Utils.sendXHR('PUT',endpoint, "version=" + new Date().getTime());
+      notification.show();
+    });
   }
-*/
 
-  return {
-	  
- 
-  }
 });
