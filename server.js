@@ -94,7 +94,7 @@
       
     });
 
-    socket.on('disconnect', function (nick) {
+    socket.on('disconnect', function () {
 
       if (!socket.nickname) return;
 
