@@ -96,11 +96,7 @@
 
     socket.on('disconnect', function (nick) {
 
-      if (!socket.nickname) {
-         db.User.findOneAndRemove(
-        {nick : nick}
-      );
-      } return;
+      if (!socket.nickname) return;
 
     // TODO: mark as disconnected in DB
     
