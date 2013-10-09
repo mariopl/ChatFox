@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.67:8443/manifest.webapp');
     }
   }
   });
@@ -36,7 +36,7 @@
     alert('Tu endpoint es: ' + endpoint);
   }
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.67:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -78,6 +78,9 @@
     $('#set-nickname').submit(function (ev) {
       socket.emit('nickname', $('#nick').val(), function (set) {
         nick.localStorage = $('#nick').val();
+        $('#send-message').css('visibility', 'visible');
+        $('#messages').css('visibility', 'visible');
+        $('#set-nickname').css('visibility', 'hidden');
         if (!set) {
           clear();
           return $('#chat').addClass('nickname-set');

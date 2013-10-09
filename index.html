@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="/css/index.css" rel="stylesheet"/>
+    <!--<link href="/css/index.css" rel="stylesheet"/>-->
+    <link href="/style/input_areas.css" rel="stylesheet"/>
+    <link href="/style/confirm.css" rel="stylesheet"/>
     <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
-    <script src="http://localhost:8443/socket.io/socket.io.js"></script>
+    <script src="http://192.168.1.67:8443/socket.io/socket.io.js"></script>
     <script defer async type="text/javascript" src="/js/index.js"></script>
     <script type="text/javascript" src="/js/push.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
   </head>
   <body>
-   <h1>ChatFox</h1><input id="endpoint" type="submit" value="Mi endpoint">
+   <input id="endpoint" type="submit" value="Mi endpoint">
    <div id="chat">
       <div id="nickname">
-        <form class="wrap" id="set-nickname">
-          <label for="nick">Introduce tu nombre y pulsa intro</label>
-          <input id="nick" name="nick" type="text" placeholder="nickname" />
-          <p id="nickname-err">Alias ya en uso</p>
+        <form id="set-nickname" role="dialog" data-type="confirm">
+          <section>
+              <p>CHATFOX<p>
+          </section>
+          <input id="nick" name="nick" type="text" placeholder="Escribe tu nombre..." />
         </form>
-      </div>
-      <div id="connecting">
-        <div class="wrap">Conectando...</div>
       </div>
       <div id="messages">
         <div id="nicknames"></div>
         <div id="lines"></div>
       </div>
       <form id="send-message">
-        <input id="message" type="text"/>
-        <button value="">Enviar</button>
+        <p>
+        <input id="message" type="text" placeholder="Escribe..."/>
+      </p>
       </form>
   </body>
 </html>
