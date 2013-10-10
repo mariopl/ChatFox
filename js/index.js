@@ -22,19 +22,6 @@
   //
   // socket.io code
   //
-  var endpoint = localStorage.endpoint;
-  var endpointButton = null;
-
-  $(function init() {
-
-    endpointButton = document.getElementById("endpoint");
-    endpointButton.addEventListener('click',endpointClick);
-
-  });
-
-  function endpointClick(){
-    alert('Tu endpoint es: ' + endpoint);
-  }
 
   var socket = io.connect('http://192.168.1.67:8443');
 

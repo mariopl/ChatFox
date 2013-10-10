@@ -2,6 +2,7 @@
 <html>
   <head>
     <!--<link href="/css/index.css" rel="stylesheet"/>-->
+    <link href="/css/estilo.css" rel="stylesheet"/>
     <link href="/style/input_areas.css" rel="stylesheet"/>
     <link href="/style/confirm.css" rel="stylesheet"/>
     <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
@@ -11,7 +12,6 @@
     <script type="text/javascript" src="/js/utils.js"></script>
   </head>
   <body>
-   <input id="endpoint" type="submit" value="Mi endpoint">
    <div id="chat">
       <div id="nickname">
         <form id="set-nickname" role="dialog" data-type="confirm">
@@ -25,10 +25,12 @@
         <div id="nicknames"></div>
         <div id="lines"></div>
       </div>
-      <form id="send-message">
-        <p>
-        <input id="message" type="text" placeholder="Escribe..."/>
-      </p>
-      </form>
+      
+    </div>
+    <div id="send-message">
+        <form id="send-message">
+          <input id="message" type="text" placeholder="Escribe..." />
+        </form>
+      </div>
   </body>
 </html>

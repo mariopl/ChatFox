@@ -1,0 +1,32 @@
+
+
+
+#chat {
+
+  background: green;
+  height: 100%
+	
+}
+
+#messages {
+
+  background: red;
+  height: 50%;
+	
+}
+
+#nicknames {
+
+  background: yellow;
+	
+}
+
+#lines {
+
+  background: orange;
+	
+}
+
+#message {
+
+}

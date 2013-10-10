@@ -394,7 +394,13 @@ html[dir="rtl"] form[role="search"] button[type="submit"] + p > button {
   left: 0;
 }
 
-#send-message {
-  position: absolute;  
+#send-message input{
+
+  background: white;
+  position: relative;
+  border-bottom: 1px solid #ddd;
   bottom: 0;
+  margin: 0 auto;
+  width: 100%
+
 }
