@@ -8,47 +8,81 @@
     <link href="/style_unstable/lists.css" rel="stylesheet"/>
     <link href="/style/confirm.css" rel="stylesheet"/>
     <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
-    <script src="http://localhost:8443/socket.io/socket.io.js"></script>
+    <script src="http://192.168.1.67:8443/socket.io/socket.io.js"></script>
     <script defer async type="text/javascript" src="/js/index.js"></script>
     <script type="text/javascript" src="/js/push.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
   </head>
   <body>
-    <section role="region">
-      <header>
-        <!--menu type="toolbar">
-          <a href="#"><span class="icon icon-edit">edit</span></a>
-          <a href="#"><span class="icon icon-add">add</span></a>
-        </menu-->
-        <h1>ChatFox</h1>
-      </header>
-      <header>
-        <h2 id="nicknames">
-        </h2>
-      </header>
-    </section>
-   <div id="chat">
-      <div id="nickname">
-        <form id="set-nickname" role="dialog" data-type="confirm">
-          <section>
-              <p>CHATFOX<p>
-          </section>
-          <input id="nick" name="nick" type="text" placeholder="Escribe tu nombre..." />
-        </form>
-      </div>
-      <div id="messages">
-        <div data-type="list">
-          <ul id="lines"></ul>
+    <div id="nickname">
+      <form id="set-nickname" role="dialog" data-type="confirm">
+        <section>
+            <h1>CHATFOX</h1>
+            <p>
+              Welcome to the chat application for Firefox OS<br/>
+              <input id="nick" name="nick" type="text" placeholder="Escribe tu nombre..." />
+            <p>
+        </section>
+      </form>
+    </div>
+
+    <section data-position="current" id="main">
+      <section role="region" id="header">
+        <header>
+          <menu type="toolbar">
+            <a href="#" id="btn-users">Conectados</a>
+          </menu>
+          <h1>ChatFox</h1>
+        </header>
+        <header>
+          <h2 id="nicknames">
+          </h2>
+        </header>
+      </section>
+
+      <div id="chat">
+        <div id="messages">
+          <div data-type="list">
+            <ul id="lines"></ul>
+          </div>
         </div>
       </div>
-    </div>
-   
-        <form id="send-message" role="search" class="bottom">
+     
+      <form id="send-message" role="search" class="bottom">
         <button type="submit">Send</button>
         <p>
         <input id="message" placeholder="Search..."/>
         </p>
-</form>
+      </form>
+    </section>
+
+    <section id="users" data-position="right">
+      <section role="region" id="header">
+        <header>
+          <a href="#" id="btn-users-back"><span class="icon icon-back">back</span></a>
+          <h1>Conectados</h1>
+        </header>
+      </section>
+      
+      <div data-type="list">
+        <ul id="connected-list">
+          <li><p>primer hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>hola</p></li>
+          <li><p>ultimo hola</p></li>
+        </ul>
+      </div>
+    </section>
  
   </body>
 </html>

@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.67:8443/manifest.webapp');
     }
   }
   });
@@ -23,7 +23,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.67:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -34,7 +34,6 @@
   });
 
   socket.on('nicknames', function (nicknames) {
-    $('#nicknames').empty().append($('<span>Conectados: </span>'));
     for (var i in nicknames) {
       $('#nicknames').append($('<b>').text(nicknames[i]));
     }
@@ -92,5 +91,14 @@
     function clear () {
       $('#message').val('').focus();
     };
+
+  document.querySelector('#btn-users').addEventListener ('click', function () {
+    document.querySelector('#users').className = 'current';
+    document.querySelector('[data-position="current"]').className = 'left';
+  });
+  document.querySelector('#btn-users-back').addEventListener ('click', function () {
+    document.querySelector('#users').className = 'right';
+    document.querySelector('[data-position="current"]').className = 'current';
+  });
 
   });

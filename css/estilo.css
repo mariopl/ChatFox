@@ -6,12 +6,38 @@ html {
 
 body {
   margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#header {
+  position: absolute;
+  width: 100%
+}
+
+#header h2 {
+  height: 1.5rem;
 }
 
 #chat {
+  height: calc(100% - 13rem);
+  overflow-y: scroll;
+  top: 9rem;
+  bottom: 4rem;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
 
-  height: 100%
-	
+#connected-list {
+  height: calc(100% - 5rem);
+	overflow-y: scroll;
+  top: 5rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  background: red;
 }
 
 #messages {
@@ -20,31 +46,100 @@ body {
 	overflow-y: scroll;
 }
 
-#nicknames {
 
-	
+#nicknames {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-#lines {
+#nicknames b {
+  margin-right: 1rem;
+  position: relative;
+}
 
-  background: orange;
-	
+/*#nicknames b:after {
+  position: absolute;
+  content: ",";
+  right: -0.5rem;
+  top: 0;
+  bottom: 0;
+}*/
+
+#nicknames b:last-child:after {
+  content: "";
+}
+
+#nickname h1 {
+  font-size: 2.4rem;
+}
+
+#nickname p {
+  font-size: 1.6rem;
+  text-align: left;
+  padding-top: 4rem;
+}
+
+#nickname input {
+  margin-top: 2rem;
+}
+
+#lines li {
+  padding-left: 1.5rem;
+	padding-right: 1.5rem;
 }
 
 #messages #nicknames b {
-  display: inline-block;
-  color: blue;
-  padding: 3px 6px;
-  margin-right: 5px;
-  border-radius: 5px;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
+
 }
 
-#messages #lines {
-  height: 400px;
-  border-top: 1px solid #ddd;
-  background: #fff;
-  overflow: auto;
-  overflow-x: hidden;
-  overflow-y: auto;
+#send-message {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+section[data-position="right"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateX(100%);
+}
+[data-position="right"].current {
+  animation: rightToCurrent 0.4s forwards;
+  -webkit-animation: rightToCurrent 0.4s forwards;
+}
+[data-position="right"].right {
+  animation: currentToRight 0.4s forwards;
+  -webkit-animation: currentToRight 0.4s forwards;
+}
+[data-position="current"].left {
+  animation: currentToLeft 0.4s forwards;
+  -webkit-animation: currentToLeft 0.4s forwards;
+}
+[data-position="current"].current {
+  animation: leftToCurrent 0.4s forwards;
+  -webkit-animation: leftToCurrent 0.4s forwards;
+}
+@keyframes rightToCurrent {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes currentToLeft {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes currentToRight {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes leftToCurrent {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
 }
