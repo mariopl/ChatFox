@@ -34,8 +34,10 @@
   });
 
   socket.on('nicknames', function (nicknames) {
+    $('#nicknames').empty().append($('<span>Conectados: </span>'));
     for (var i in nicknames) {
       $('#nicknames').append($('<b>').text(nicknames[i]));
+      $('#nicknamesView').append($('<li>').append($('<p>').text(nicknames[i])));
     }
   });
 
@@ -68,8 +70,6 @@
       }
       socket.emit('nickname', $('#nick').val(), function (set) {
         nick.localStorage = $('#nick').val();
-        $('#send-message').css('visibility', 'visible');
-        $('#messages').css('visibility', 'visible');
         $('#set-nickname').css('visibility', 'hidden');
         if (!set) {
           clear();
@@ -99,6 +99,7 @@
   document.querySelector('#btn-users-back').addEventListener ('click', function () {
     document.querySelector('#users').className = 'right';
     document.querySelector('[data-position="current"]').className = 'current';
+
   });
 
   });

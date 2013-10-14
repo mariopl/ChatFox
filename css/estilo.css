@@ -10,6 +10,12 @@ body {
   overflow: hidden;
 }
 
+#main {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
 #header {
   position: absolute;
   width: 100%
@@ -29,15 +35,19 @@ body {
   position: absolute;
 }
 
-#connected-list {
+#nicknamesView {
   height: calc(100% - 5rem);
-	overflow-y: scroll;
+  overflow-y: scroll;
   top: 5rem;
   bottom: 0;
   left: 0;
   right: 0;
   position: absolute;
-  background: red;
+}
+
+#nicknamesView li {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 #messages {
