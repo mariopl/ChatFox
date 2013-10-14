@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.67:8443/manifest.webapp');
+        .install('http://localhost:8443/manifest.webapp');
     }
   }
   });
@@ -23,14 +23,14 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://192.168.1.67:8443');
+  var socket = io.connect('http://localhost:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
   });
 
   socket.on('announcement', function (msg) {
-    $('#lines').append($('<p>').append($('<em>').text(msg)));
+    $('#lines').append($('<li>').append($('<p>').text(msg)));
   });
 
   socket.on('nicknames', function (nicknames) {

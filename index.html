@@ -3,15 +3,30 @@
   <head>
     <!--<link href="/css/index.css" rel="stylesheet"/>-->
     <link href="/css/estilo.css" rel="stylesheet"/>
+    <link href="/style/headers.css" rel="stylesheet"/>
     <link href="/style/input_areas.css" rel="stylesheet"/>
+    <link href="/style_unstable/lists.css" rel="stylesheet"/>
     <link href="/style/confirm.css" rel="stylesheet"/>
     <script type="text/javascript" src="/js/jquery-2.0.3.min.js"></script>
-    <script src="http://192.168.1.67:8443/socket.io/socket.io.js"></script>
+    <script src="http://localhost:8443/socket.io/socket.io.js"></script>
     <script defer async type="text/javascript" src="/js/index.js"></script>
     <script type="text/javascript" src="/js/push.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
   </head>
   <body>
+    <section role="region">
+      <header>
+        <!--menu type="toolbar">
+          <a href="#"><span class="icon icon-edit">edit</span></a>
+          <a href="#"><span class="icon icon-add">add</span></a>
+        </menu-->
+        <h1>ChatFox</h1>
+      </header>
+      <header>
+        <h2 id="nicknames">
+        </h2>
+      </header>
+    </section>
    <div id="chat">
       <div id="nickname">
         <form id="set-nickname" role="dialog" data-type="confirm">
@@ -22,15 +37,18 @@
         </form>
       </div>
       <div id="messages">
-        <div id="nicknames"></div>
-        <div id="lines"></div>
+        <div data-type="list">
+          <ul id="lines"></ul>
+        </div>
       </div>
-      
     </div>
-    <div id="send-message">
-        <form id="send-message">
-          <input id="message" type="text" placeholder="Escribe..." />
-        </form>
-      </div>
+   
+        <form id="send-message" role="search" class="bottom">
+        <button type="submit">Send</button>
+        <p>
+        <input id="message" placeholder="Search..."/>
+        </p>
+</form>
+ 
   </body>
 </html>
