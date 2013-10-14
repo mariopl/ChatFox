@@ -63,6 +63,10 @@
   //
   $(function () {
     $('#set-nickname').submit(function (ev) {
+      if($('#nick').val() == "") {
+        alert('Por favor, escribe tu nombre');
+        return;
+      }
       socket.emit('nickname', $('#nick').val(), function (set) {
         nick.localStorage = $('#nick').val();
         $('#send-message').css('visibility', 'visible');
