@@ -34,7 +34,7 @@
   });
 
   socket.on('nicknames', function (nicknames) {
-    $('#nicknames').empty().append($('<span>Conectados: </span>'));
+    $('#nicknames').empty().append($('<span>Connected: </span>'));
     $('#nicknamesView').empty();
     for (var i in nicknames) {
       $('#nicknames').append($('<b>').text(nicknames[i]));
