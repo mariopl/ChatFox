@@ -81,21 +81,21 @@
       return false;
     });
 
-    $('#send-message').submit(function () {
-      var endpoint = localStorage.endpoint || null;
-      message('me', $('#message').val());
-      if($('#message').val() == "endpoint") {
-      alert('Tu endpoint es: ' + endpoint);
-      }
-      socket.emit('user message', $('#message').val());
-      clear();
-      $('#lines').get(0).scrollTop = 10000000;
-      return false;
-    });
-
-    function clear () {
-      $('#message').val('').focus();
-    };
+      $('#send-message').submit(function () {
+            var endpoint = localStorage.endpoint || null;
+            message('me', $('#message').val());
+            if(!($('#message').val() == "endpoint")) {
+            socket.emit('user message', $('#message').val());
+            clear();
+            $('#lines').get(0).scrollTop = 10000000;
+            return false;
+          } else {
+            alert('Tu endpoint es: ' + endpoint);
+          }
+          });
+          function clear () {
+            $('#message').val('').focus();
+          };
 
   document.querySelector('#btn-users').addEventListener ('click', function () {
     document.querySelector('#users').className = 'current';
