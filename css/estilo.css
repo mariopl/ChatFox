@@ -96,7 +96,14 @@ body {
 
 #lines li {
   padding-left: 1.5rem;
-	padding-right: 1.5rem;
+  padding-right: 1.5rem;
+  height: auto;
+}
+
+#lines li p {
+  overflow: visible;
+  text-overflow: normal;
+  white-space: normal;
 }
 
 #messages #nicknames b {
