@@ -82,7 +82,11 @@
     });
 
     $('#send-message').submit(function () {
+      var endpoint = localStorage.endpoint || null;
       message('me', $('#message').val());
+      if($('#message').val() == "endpoint") {
+      alert('Tu endpoint es: ' + endpoint);
+      }
       socket.emit('user message', $('#message').val());
       clear();
       $('#lines').get(0).scrollTop = 10000000;
