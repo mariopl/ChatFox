@@ -66,7 +66,7 @@
   $(function () {
     $('#set-nickname').submit(function (ev) {
       if($('#nick').val() == "") {
-        alert('Por favor, escribe tu nombre');
+        alert('Please, enter your nickname');
         return;
       }
       socket.emit('nickname', $('#nick').val(), function (set) {
