@@ -91,6 +91,9 @@
             return false;
           } else {
             alert('Tu endpoint es: ' + endpoint);
+            clear();
+            $('#lines').get(0).scrollTop = 10000000;
+            return false;
           }
           });
           function clear () {
