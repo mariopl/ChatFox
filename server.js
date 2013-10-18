@@ -35,11 +35,11 @@
 
     socket.on('user message', function (msg) {
 
-      /*if (recent_messages.length > 5) {
+      if (recent_messages.length > 100) {
       recent_messages = recent_messages.slice(recent_messages.length-5, recent_messages.length);
     }
     recent_messages.push({nick: socket.nickname, msg: msg});
-    */
+    
 
     this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
       socket.broadcast.emit('user message', socket.nickname, msg);
