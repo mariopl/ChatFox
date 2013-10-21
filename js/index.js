@@ -38,7 +38,7 @@
     $('#nicknamesView').empty();
     for (var i in nicknames) {
       $('#nicknames').append($('<b>').text(nicknames[i]));
-      $('#nicknamesView').append($('<p>').append($('<b>').text(nicknames[i])));
+      $('#nicknamesView').append($('<li>').append($('<p>').text(nicknames[i])));
     }
   });
 
@@ -53,7 +53,7 @@
   });
 
   socket.on('error', function (e) {
-    message('ChatFox', e ? e : 'Algo está fallando');
+    message('ChatFox', e ? e : 'Algo falla, prueba a reiniciar la app');
   });
 
   function message (from, msg) {
@@ -64,22 +64,46 @@
   // dom manipulation code
   //
   $(function () {
-    $('#set-nickname').submit(function (ev) {
-      if($('#nick').val() == "") {
-        alert('Please, enter your nickname');
-        return;
-      }
-      socket.emit('nickname', $('#nick').val(), function (set) {
-        nick.localStorage = $('#nick').val();
-        $('#set-nickname').css('visibility', 'hidden');
-        if (!set) {
-          clear();
-          return $('#chat').addClass('nickname-set');
+    var nick = localStorage.nick || null;
+    $('#set-nickname').css('visibility', 'hidden');
+
+    if(!nick) {
+      $('#set-nickname').css('visibility', 'visible');
+      $('#set-nickname').submit(function (ev) {
+        if($('#nick').val() == "") {
+          alert('Please, write your nickname');
+          return;
+
         }
-        $('#nickname-err').css('visibility', 'visible');
+      var socket = io.connect('http://localhost:8443');
+        socket.emit('nickname', $('#nick').val(), function (set) {
+          var nick = localStorage.nick = $('#nick').val();
+          $('#set-nickname').css('visibility', 'hidden');
+          if (!set) {
+            clear();
+            return $('#chat').addClass('nickname-set');
+          }
+          $('#nickname-err').css('visibility', 'visible');
+        });
+        return false;
       });
-      return false;
-    });
+      } else {
+      
+      var nick = localStorage.nick;
+      var socket = io.connect('http://localhost:8443');
+      socket.emit('nickname', nick, function (set) {
+        //$('#set-nickname').css('visibility', 'hidden');
+        if (!set) {
+            clear();
+            return $('#chat').addClass('nickname-set');
+          }
+          $('#nickname-err').css('visibility', 'visible');
+        });
+      
+        return false;
+      
+    }}); 
+      
 
       $('#send-message').submit(function () {
             var endpoint = localStorage.endpoint || null;
@@ -108,7 +132,5 @@
   document.querySelector('#btn-users-back').addEventListener ('click', function () {
     document.querySelector('#users').className = 'right';
     document.querySelector('[data-position="current"]').className = 'current';
-
-  });
 
   });
