@@ -25,16 +25,6 @@ body {
   height: 1.5rem;
 }
 
-#chat {
-  height: calc(100% - 13rem);
-  overflow-y: scroll;
-  top: 9rem;
-  bottom: 4rem;
-  left: 0;
-  right: 0;
-  position: absolute;
-}
-
 #nicknamesView {
   height: calc(100% - 5rem);
   overflow-y: scroll;
@@ -52,8 +42,14 @@ body {
 
 #messages {
 
-  height: 100%;
 	overflow-y: scroll;
+  height: calc(100% - 13rem);
+  overflow-y: scroll;
+  top: 9rem;
+  bottom: 4rem;
+  left: 0;
+  right: 0;
+  position: absolute;
 }
 
 
@@ -94,19 +90,34 @@ body {
   margin-top: 2rem;
 }
 
-#lines li {
+#messages #lines {
+  height: 100%;
+  background: #fff;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#lines p {
+  font-size: 1.6rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   height: auto;
 }
 
-#lines li p {
-  overflow: visible;
-  text-overflow: normal;
-  white-space: normal;
+#lines p b {
+  font-size: 1.6rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  height: auto;
+  color: rgba(230, 96, 0, 1);
 }
 
-#messages #nicknames b {
+#messages li {
+
+}
+
+#messages li p {
 
 }
 

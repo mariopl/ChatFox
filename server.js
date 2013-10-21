@@ -28,9 +28,9 @@
     if (recent_messages.length > 0) {
     
     for (i in recent_messages) {
-      socket.emit('announcement', recent_messages[i].nick + ': ' + recent_messages[i].msg);
+      socket.emit('announcement', recent_messages[i].nick, recent_messages[i].msg);
     }
-    }
+  }
 
 
     socket.on('user message', function (msg) {

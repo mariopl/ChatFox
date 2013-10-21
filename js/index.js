@@ -29,16 +29,16 @@
     $('#chat').addClass('connected');
   });
 
-  socket.on('announcement', function (msg) {
-    $('#lines').append($('<li>').append($('<p>').text(msg)));
-  });
+   socket.on('announcement', function (nick, msg) {
+    $('#lines').append($('<p>').append($('<b>').text(nick), msg));
+  }); 
 
   socket.on('nicknames', function (nicknames) {
     $('#nicknames').empty().append($('<span>Connected: </span>'));
     $('#nicknamesView').empty();
     for (var i in nicknames) {
       $('#nicknames').append($('<b>').text(nicknames[i]));
-      $('#nicknamesView').append($('<li>').append($('<p>').text(nicknames[i])));
+      $('#nicknamesView').append($('<p>').append($('<b>').text(nicknames[i])));
     }
   });
 
@@ -57,7 +57,7 @@
   });
 
   function message (from, msg) {
-    $('#lines').append($('<li>').append($('<p>').text(from + ': ' + msg)));
+    $('#lines').append($('<p>').append($('<b>').text(from), msg));
   }
 
   //
@@ -96,7 +96,8 @@
             return false;
           }
           });
-          function clear () {
+
+        function clear () {
             $('#message').val('').focus();
           };
 
