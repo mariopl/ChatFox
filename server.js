@@ -35,8 +35,8 @@
 
     socket.on('user message', function (msg) {
 
-      if (recent_messages.length > 100) {
-      recent_messages = recent_messages.slice(recent_messages.length-5, recent_messages.length);
+      if (recent_messages.length > 8) {
+      recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
     }
     recent_messages.push({nick: socket.nickname, msg: msg});
     
