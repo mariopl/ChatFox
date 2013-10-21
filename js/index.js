@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.77:8443/manifest.webapp');
     }
   }
   });
@@ -23,7 +23,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.77:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -64,22 +64,45 @@
   // dom manipulation code
   //
   $(function () {
-    $('#set-nickname').submit(function (ev) {
-      if($('#nick').val() == "") {
-        alert('Por favor, escribe tu nombre');
-        return;
-      }
-      socket.emit('nickname', $('#nick').val(), function (set) {
-        nick.localStorage = $('#nick').val();
-        $('#set-nickname').css('visibility', 'hidden');
-        if (!set) {
-          clear();
-          return $('#chat').addClass('nickname-set');
+    var nick = localStorage.nick || null;
+    $('#set-nickname').css('visibility', 'hidden');
+
+    if(!nick) {
+      $('#set-nickname').css('visibility', 'visible');
+      $('#set-nickname').submit(function (ev) {
+        if($('#nick').val() == "") {
+          alert('Please, write your nickname');
+          return;
         }
-        $('#nickname-err').css('visibility', 'visible');
+        var socket = io.connect('http://192.168.1.77:8443');
+        socket.emit('nickname', $('#nick').val(), function (set) {
+          var nick = localStorage.nick = $('#nick').val();
+          $('#set-nickname').css('visibility', 'hidden');
+          if (!set) {
+            clear();
+            return $('#chat').addClass('nickname-set');
+          }
+          $('#nickname-err').css('visibility', 'visible');
+        });
+        return false;
       });
-      return false;
-    });
+    } else {
+      
+      var nick = localStorage.nick;
+      var socket = io.connect('http://192.168.1.77:8443');
+      alert('tu nombre es ' + nick);
+      socket.emit('nickname', nick, function (set) {
+        //$('#set-nickname').css('visibility', 'hidden');
+        if (!set) {
+            clear();
+            return $('#chat').addClass('nickname-set');
+          }
+          $('#nickname-err').css('visibility', 'visible');
+        });
+      
+        return false;
+      
+    }});
 
     $('#send-message').submit(function () {
       message('me', $('#message').val());
@@ -88,6 +111,7 @@
       $('#lines').get(0).scrollTop = 10000000;
       return false;
     });
+  
 
     function clear () {
       $('#message').val('').focus();
@@ -103,4 +127,4 @@
 
   });
 
-  });
+  
