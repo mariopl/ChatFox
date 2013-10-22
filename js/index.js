@@ -91,6 +91,13 @@
       
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
+      socket.on('announcement', function (nick, msg) {
+        $('#lines').append($('<p>').append($('<b>').text(nick), msg));
+        $('#lines').get(0).scrollTop = 10000000;
+      });
+      while (!nick) {
+        $('send-message').css('visibility', 'hidden');
+      } 
       socket.emit('nickname', nick, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
         if (!set) {
