@@ -118,5 +118,13 @@
     socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
     socket.broadcast.emit('nicknames', nicknames);
     });
+
+    socket.on('logout', function(nickvalue) {
+
+      delete nicknames[nickvalue];
+      socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+      socket.broadcast.emit('nicknames', nicknames);
+
+    })
     });
   });

@@ -141,3 +141,17 @@
     document.querySelector('[data-position="current"]').className = 'current';
 
   });
+  
+  document.querySelector('#btn-logout').addEventListener ('click', function () {
+    
+    var socket = io.connect('http://localhost:8443');
+    var nickvalue = localStorage.nick;
+    socket.emit('logout', nickvalue);
+    clean();
+
+  });
+
+  function clean () {
+    localStorage.nick = null;
+    $('#set-nickname').css('visibility', 'visible');
+  };
