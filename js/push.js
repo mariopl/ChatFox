@@ -34,6 +34,16 @@ var Push = (function() {
       var notification = navigator.mozNotification.createNotification("ChatFox", "Nuevo mensaje de chat");
     
       notification.show();
+
+      if (!localStorage.notificationsReceived) {
+
+
+      localStorage.notificationsReceived = 1;
+
+    } else if (localStorage.notificationsReceived) {
+
+      localStorage.notificationsReceived++;
+    }
     });
   }
 

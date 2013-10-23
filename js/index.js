@@ -9,17 +9,25 @@
     }
   }
   });
-
-  var Notifications = function notify() {
-
-  var notify = navigator.mozNotification.createNotification("ChatFox",
-       "You have a new message");
-              notification.show();
-  };
   
   Push();
+  
+  $(function () {
 
-  //
+   if (!localStorage.messagesReceived) {
+
+    localStorage.messagesReceived = 0;
+
+   }
+
+   if (!localStorage.notificationsReceived) {
+
+    localStorage.notificationsReceived = 0;
+
+   }
+
+  });
+
   // socket.io code
   //
 
@@ -42,7 +50,9 @@
     }
   });
 
-  socket.on('user message', message);
+  socket.on('user message', message, function() {
+  });
+  
   socket.on('reconnect', function () {
     $('#lines').remove();
     message('ChatFox', 'Reconectado al servidor');
@@ -58,7 +68,11 @@
 
   function message (from, msg) {
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
+    if (localStorage.messagesReceived) {
+      localStorage.messagesReceived++;
+    }
   }
+    
 
   //
   // dom manipulation code
@@ -117,7 +131,7 @@
 
       $('#send-message').submit(function () {
             var endpoint = localStorage.endpoint || null;
-            if(($('#message').val() == "jhvhg") ||($('#message').val() == " ") || ($('#message').val() == "  ") || ($('#message').val() == "   ") ) {
+            if(($('#message').val() == "") ||($('#message').val() == " ") || ($('#message').val() == "  ") || ($('#message').val() == "   ") ) {
             clear(); 
             return;
             }
@@ -126,6 +140,7 @@
             socket.emit('user message', $('#message').val());
             clear();
             $('#lines').get(0).scrollTop = 10000000;
+            $('#message').blur();
             return false;
 
           } else {
@@ -160,8 +175,15 @@
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
     clean();
+  });
+
+  document.querySelector('#btn-statistics').addEventListener ('click', function () {
+ 
+    alert('Messages received: ' +  localStorage.messagesReceived + '\n\nNotifications received: ' + localStorage.notificationsReceived);
 
   });
+
+
 
   function clean () {
     localStorage.nick = null;
