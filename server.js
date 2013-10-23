@@ -89,7 +89,7 @@
 
           fn(false);
           nicknames[nick] = socket.nickname = nick;
-          socket.broadcast.emit('announcement', nick + ' connected');
+          //socket.broadcast.emit('announcement', nick + ' connected');
         io.sockets.emit('nicknames', nicknames);
         }
       
@@ -115,14 +115,14 @@
       }
     });
 
-    socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+    //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
     socket.broadcast.emit('nicknames', nicknames);
     });
 
     socket.on('logout', function(nickvalue) {
 
       delete nicknames[nickvalue];
-      socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+      //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
       socket.broadcast.emit('nicknames', nicknames);
 
     })

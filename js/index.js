@@ -70,8 +70,11 @@
     if(!nick) {
       $('#set-nickname').css('visibility', 'visible');
       $('#set-nickname').submit(function (ev) {
-        if($('#nick').val() == "") {
+        if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
+          || ($('#nick').val() == "    " || ($('#nick').val() == "     "))) {
           alert('Please, write your nickname');
+          clearNickname();
+          $('#set-nickname').css('visibility', 'visible');
           return;
 
         }
@@ -114,22 +117,31 @@
 
       $('#send-message').submit(function () {
             var endpoint = localStorage.endpoint || null;
-            message('me', $('#message').val());
+            if(($('#message').val() == "jhvhg") ||($('#message').val() == " ") || ($('#message').val() == "  ") || ($('#message').val() == "   ") ) {
+            clear(); 
+            return;
+            }
             if(!($('#message').val() == "endpoint")) {
+            message('me', $('#message').val());
             socket.emit('user message', $('#message').val());
             clear();
             $('#lines').get(0).scrollTop = 10000000;
             return false;
+
           } else {
             alert('Tu endpoint es: ' + endpoint);
             clear();
             $('#lines').get(0).scrollTop = 10000000;
             return false;
-          }
+          } 
           });
 
         function clear () {
             $('#message').val('').focus();
+          };
+
+        function clearNickname () {
+            $('#nick').val('').focus();
           };
 
   document.querySelector('#btn-users').addEventListener ('click', function () {
