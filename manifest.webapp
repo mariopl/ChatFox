@@ -7,6 +7,10 @@
     "name": "Mario Pierre-Louis Marín",
     "url": "https://github.com/mariopl/ChatFox"
   },
+  "icons": {
+    "128": "/css/chatfox128.png",
+    "60": "/css/chatfox.png"
+  },
   "installs_allowed_from": ["*"],
   "default_locale": "en",
   "permissions": {
