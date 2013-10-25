@@ -73,11 +73,21 @@
     }
   }
     
+  function timer() {
+    setTimeout("refresh()",180000);
+  }
+
+  function refresh() {
+
+    location.reload(true);
+    timer();
+  }
 
   //
   // dom manipulation code
   //
   $(function () {
+
     var nick = localStorage.nick || null;
     $('#set-nickname').css('visibility', 'hidden');
 
@@ -96,6 +106,7 @@
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
+          timer();
           if (!set) {
             clear();
             return $('#chat').addClass('nickname-set');
@@ -105,7 +116,7 @@
         return false;
       });
       } else {
-      
+      $('send-message').css('visibility', 'visible');
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
       
