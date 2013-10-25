@@ -108,10 +108,7 @@
       
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
-      socket.on('announcement', function (nick, msg) {
-        $('#lines').append($('<p>').append($('<b>').text(nick), msg));
-        $('#lines').get(0).scrollTop = 10000000;
-      });
+      
       while (!nick) {
         $('send-message').css('visibility', 'hidden');
       } 
@@ -141,6 +138,9 @@
             clear();
             $('#lines').get(0).scrollTop = 10000000;
             $('#message').blur();
+            if (localStorage.messagesReceived) {
+            localStorage.messagesReceived--;
+          }
             return false;
 
           } else {
@@ -174,7 +174,7 @@
     var socket = io.connect('http://localhost:8443');
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
-    clean();
+    login();
   });
 
   document.querySelector('#btn-statistics').addEventListener ('click', function () {
@@ -183,9 +183,50 @@
 
   });
 
-
-
-  function clean () {
-    localStorage.nick = null;
+  function login () {
+    //var nick = localStorage.nick || null;
     $('#set-nickname').css('visibility', 'visible');
-  };
+
+    if(!nick) {
+      $('#set-nickname').css('visibility', 'visible');
+      $('#set-nickname').submit(function (ev) {
+        if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
+          || ($('#nick').val() == "    " || ($('#nick').val() == "     "))) {
+          alert('Please, write your nickname');
+          clearNickname();
+          $('#set-nickname').css('visibility', 'visible');
+          return;
+
+        }
+      var socket = io.connect('http://localhost:8443');
+        socket.emit('nickname', $('#nick').val(), function (set) {
+          var nick = localStorage.nick = $('#nick').val();
+          $('#set-nickname').css('visibility', 'hidden');
+          if (!set) {
+            clear();
+            return $('#chat').addClass('nickname-set');
+          }
+          $('#nickname-err').css('visibility', 'visible');
+        });
+        return false;
+      });
+      } else {
+      
+      var nick = localStorage.nick;
+      var socket = io.connect('http://localhost:8443');
+     
+      while (!nick) {
+        $('send-message').css('visibility', 'hidden');
+      } 
+      socket.emit('nickname', nick, function (set) {
+        //$('#set-nickname').css('visibility', 'hidden');
+        if (!set) {
+            clear();
+            return $('#chat').addClass('nickname-set');
+          }
+          $('#nickname-err').css('visibility', 'visible');
+        });
+      
+        return false;
+      
+    }};
