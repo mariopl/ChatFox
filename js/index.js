@@ -74,7 +74,7 @@
   }
     
   function timer() {
-    setTimeout("refresh()",180000);
+    setTimeout("refresh()",300000);
   }
 
   function refresh() {
@@ -88,6 +88,8 @@
   //
   $(function () {
 
+    timer();
+    
     var nick = localStorage.nick || null;
     $('#set-nickname').css('visibility', 'hidden');
 
@@ -106,7 +108,7 @@
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
-          timer();
+          //timer();
           if (!set) {
             clear();
             return $('#chat').addClass('nickname-set');
