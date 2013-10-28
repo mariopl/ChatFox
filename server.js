@@ -92,6 +92,7 @@
           //socket.broadcast.emit('announcement', nick + ' connected');
         io.sockets.emit('nicknames', nicknames);
         }
+        socket.emit('button enabled');
       
     });
 

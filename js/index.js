@@ -56,15 +56,24 @@
   socket.on('reconnect', function () {
     $('#lines').remove();
     message('ChatFox', 'Reconectado al servidor');
+    location.reload(true);
+    alert('reload');
   });
 
   socket.on('reconnecting', function () {
     message('ChatFox', 'Intentando conectarse al servidor');
+    $('#send-message').css('visibility', 'hidden');
   });
 
   socket.on('error', function (e) {
     message('ChatFox', e ? e : 'Algo falla, prueba a reiniciar la app');
+    location.reload(true);
   });
+
+  socket.on('button enabled', function() {
+    //alert('nick recibido');
+    $('#send-message').css('visibility', 'visible');
+  })
 
   function message (from, msg) {
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
@@ -72,17 +81,16 @@
       localStorage.messagesReceived++;
     }
   }
-    
+
   function timer() {
-    setTimeout("refresh()",8000);
-    $('#send-message').css('visibility', 'hidden');
+    setTimeout("enable()",10000);
+    alert(localStorage.nick);
   }
 
-  function refresh() {
+  function enable() {
 
-    //location.reload(true);
-    //timer();
     $('#send-message').css('visibility', 'visible');
+
   }
 
   //
@@ -108,7 +116,7 @@
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
-          //timer();
+  
           if (!set) {
             clear();
             return $('#chat').addClass('nickname-set');
@@ -119,7 +127,6 @@
       });
       } else {
 
-      timer();
 
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
@@ -221,7 +228,7 @@
       });
       } else {
 
-      timer();
+
       
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
