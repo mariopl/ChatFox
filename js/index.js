@@ -151,9 +151,6 @@
             clear();
             $('#lines').get(0).scrollTop = 10000000;
             $('#message').blur();
-            if (localStorage.messagesReceived) {
-            localStorage.messagesReceived--;
-          }
             return false;
 
           } else {
