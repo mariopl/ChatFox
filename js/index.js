@@ -74,21 +74,21 @@
   }
     
   function timer() {
-    setTimeout("refresh()",300000);
+    setTimeout("refresh()",5000);
+    $('#send-message').css('visibility', 'hidden');
   }
 
   function refresh() {
 
-    location.reload(true);
-    timer();
+    //location.reload(true);
+    //timer();
+    $('#send-message').css('visibility', 'visible');
   }
 
   //
   // dom manipulation code
   //
   $(function () {
-
-    timer();
     
     var nick = localStorage.nick || null;
     $('#set-nickname').css('visibility', 'hidden');
@@ -118,13 +118,12 @@
         return false;
       });
       } else {
-      $('send-message').css('visibility', 'visible');
+
+      timer();
+
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
-      
-      while (!nick) {
-        $('send-message').css('visibility', 'hidden');
-      } 
+
       socket.emit('nickname', nick, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
         if (!set) {
@@ -221,13 +220,12 @@
         return false;
       });
       } else {
+
+      timer();
       
       var nick = localStorage.nick;
       var socket = io.connect('http://localhost:8443');
      
-      while (!nick) {
-        $('send-message').css('visibility', 'hidden');
-      } 
       socket.emit('nickname', nick, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
         if (!set) {
