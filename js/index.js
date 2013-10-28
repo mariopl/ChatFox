@@ -74,7 +74,7 @@
   }
     
   function timer() {
-    setTimeout("refresh()",5000);
+    setTimeout("refresh()",8000);
     $('#send-message').css('visibility', 'hidden');
   }
 
