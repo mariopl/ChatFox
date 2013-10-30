@@ -50,6 +50,18 @@ var Push = (function() {
     
       navigator.push.unregister(endpoint);
 
+      var req = navigator.push.register();
+
+      req.onsuccess = function(e) {
+        var endpoint = localStorage.endpoint = req.result;
+        var socket = io.connect('http://localhost:8443');
+        socket.emit('user endpoint', endpoint);
+      }
+
+      req.onerror = function(e) {
+         alert("Error getting a new endpoint: " + JSON.stringify(e));
+      }
+
     });
   }
 
