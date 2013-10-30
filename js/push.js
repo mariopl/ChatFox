@@ -12,7 +12,7 @@ var Push = (function() {
       
       req.onsuccess = function(e) {
         var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://localhost:8443');
+        var socket = io.connect('http://192.168.1.77:8443');
         socket.emit('user endpoint', endpoint); 
       }
       
@@ -23,7 +23,7 @@ var Push = (function() {
   } else {
 
     var endpoint = localStorage.endpoint;
-    var socket = io.connect('http://localhost:8443');
+    var socket = io.connect('http://192.168.1.77:8443');
         socket.emit('user endpoint', endpoint); 
   }
 
@@ -54,7 +54,7 @@ var Push = (function() {
 
       req.onsuccess = function(e) {
         var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://localhost:8443');
+        var socket = io.connect('http://192.168.1.77:8443');
         socket.emit('user endpoint', endpoint);
       }
 

@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.77:8443/manifest.webapp');
     }
   }
   });
@@ -31,7 +31,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.77:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -112,7 +112,7 @@
           return;
 
         }
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.77:8443');
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
@@ -129,7 +129,7 @@
 
 
       var nick = localStorage.nick;
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.77:8443');
 
       socket.emit('nickname', nick, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
@@ -187,7 +187,7 @@
   
   document.querySelector('#btn-logout').addEventListener ('click', function () {
     
-    var socket = io.connect('http://localhost:8443');
+    var socket = io.connect('http://192.168.1.77:8443');
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
     login();
@@ -214,7 +214,7 @@
           return;
 
         }
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.77:8443');
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
@@ -231,7 +231,7 @@
 
       
       var nick = localStorage.nick;
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.77:8443');
      
       socket.emit('nickname', nick, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
