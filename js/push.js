@@ -48,17 +48,7 @@ var Push = (function() {
 
     window.navigator.mozSetMessageHandler('push-register', function() {
     
-      var req2 = navigator.push.unregister(endpoint);
-
-      req2.onsuccess = function(e) {
-        var endpoint = localStorage.endpoint = req2.result;
-        var socket = io.connect('http://localhost:8443');
-        socket.emit('user endpoint', endpoint); 
-      }
-
-      req2.onerror = function(e) {
-         alert("Error getting a new endpoint: " + JSON.stringify(e));
-      }
+      navigator.push.unregister(endpoint);
 
     });
   }
