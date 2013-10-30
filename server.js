@@ -143,6 +143,8 @@ MongoClient.connect('mongodb://localhost:27017/chatfox', function(err,db){
 
  
         var coleccion = db.collection('usuarios');
+
+        
  
  //Creamos el cursos con que cumpla la condición que indicamos en la variable query
         var cursor = coleccion.find();
