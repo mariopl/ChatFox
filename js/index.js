@@ -57,11 +57,11 @@
     $('#lines').remove();
     message('ChatFox', 'Reconectado al servidor');
     location.reload(true);
-    alert('reload');
   });
 
   socket.on('reconnecting', function () {
     message('ChatFox', 'Intentando conectarse al servidor');
+    location.reload(true);
     $('#send-message').css('visibility', 'hidden');
   });
 
@@ -105,7 +105,7 @@
       $('#set-nickname').css('visibility', 'visible');
       $('#set-nickname').submit(function (ev) {
         if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-          || ($('#nick').val() == "    " || ($('#nick').val() == "     "))) {
+          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null")|| ($('#nick').val() == "ChatFox")) {
           alert('Please, write your nickname');
           clearNickname();
           $('#set-nickname').css('visibility', 'visible');
@@ -207,7 +207,7 @@
       $('#set-nickname').css('visibility', 'visible');
       $('#set-nickname').submit(function (ev) {
         if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-          || ($('#nick').val() == "    " || ($('#nick').val() == "     "))) {
+          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null") || ($('#nick').val() == "ChatFox"))  {
           alert('Please, write your nickname');
           clearNickname();
           $('#set-nickname').css('visibility', 'visible');
