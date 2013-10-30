@@ -129,3 +129,29 @@
     })
     });
   });
+
+// hacemos referencia a la dependencia
+var MongoClient = require('mongodb').MongoClient;
+ 
+//Conexion con MongoDB -> servidor:puerto/nombreBasedeDatos
+MongoClient.connect('mongodb://localhost:27017/chatfox', function(err,db){
+        if(err) throw err;
+
+        db.createCollection("usuarios")
+
+ //Vamos a mostrar los vendedores que hayan vendido una fregona.
+
+ 
+        var coleccion = db.collection('usuarios');
+ 
+ //Creamos el cursos con que cumpla la condición que indicamos en la variable query
+        var cursor = coleccion.find();
+ 
+ //Recorremos el cursos y ostramos cada documento
+        cursor.each(function(err, item) {
+                if(item != null) console.dir(item);
+  // Si no existen mas item que mostrar, cerramos la conexión con con Mongo.
+                else db.close();
+        });
+});
+

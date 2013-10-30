@@ -57,7 +57,6 @@
     $('#lines').remove();
     message('ChatFox', 'Reconectado al servidor');
     location.reload(true);
-    alert('reload');
   });
 
   socket.on('reconnecting', function () {
