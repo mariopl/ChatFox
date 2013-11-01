@@ -1,4 +1,131 @@
 
+  /*
+  var fs = require('fs'),
+    path = require('path'),
+    sio = require('socket.io'),
+    static = require('node-static'),
+    db = require('./js/db.js'),
+    push = require('./js/push.js'),
+    request = require('request'),
+    MongoClient = require('mongodb').MongoClient;
+
+  var app = require('http').createServer(handler);
+  app.listen(8443);
+
+  var file = new static.Server(path.join(__dirname,'/'));
+  
+
+
+  function handler(req, res) {
+    file.serve(req, res);
+  }
+
+  MongoClient.connect('mongodb://127.0.0.1:27017/chatfox', function(err, db) {
+  if (err) throw err;
+  console.log("Connected to Database");
+
+  var io = sio.listen(app),
+    nicknames = {},
+    endpoints = [],
+    recent_messages = [];
+
+  io.sockets.on('connection', function (socket) {
+
+    if (recent_messages.length > 0) {
+    
+    for (i in recent_messages) {
+      socket.emit('announcement', recent_messages[i].nick, recent_messages[i].msg);
+    }
+  }
+
+
+    socket.on('user message', function (msg) {
+
+      if (recent_messages.length > 8) {
+      recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
+    }
+    recent_messages.push({nick: socket.nickname, msg: msg});
+    
+
+    this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
+      socket.broadcast.emit('user message', socket.nickname, msg);
+      //desde aquí despertamos a a través de los endpoints
+      for (var i = 0; i < endpoints.length ; i++) {
+            
+        request.put({
+          url:     endpoints[i],
+          body:    "version=" + new Date().getTime()
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+              console.log(body)
+            }
+            });
+
+        this.log.debug('Waking up ' + endpoints[i]);
+
+      }
+    });
+
+      socket.on('user endpoint', function(endpoint){
+      //endpoints[endpoint] = socket.endpoint = endpoint;
+      socket.endpoint = endpoint;
+      endpoints.push(endpoint);
+      this.log.debug(endpoints);
+      this.log.debug(endpoints.length);
+      function eliminateDuplicates(endpoints) {
+
+        this.log.debug('eliminateDuplicates');
+      }
+    
+      
+      });
+
+
+    socket.on('nickname', function (nickvalue, fn) {
+
+      db.collection('usuarios', function(err,collection){
+    doc = {"nick": nickvalue};
+    collection.insert(doc, function(){});
+});
+      socket.emit('button enabled', nickvalue);
+      nicknames[nickvalue] = socket.nickname = nickvalue;
+    io.sockets.emit('nicknames', nicknames);      
+
+    socket.on('disconnect', function () {
+
+      if (!socket.nickname) return;
+
+    // TODO: mark as disconnected in DB
+    
+    delete nicknames[socket.nickname];
+
+    var conditions = { nick: socket.nickname }
+      , update = { connected: false, last_connected: new Date() }
+      , options = { multi: false }
+      , callback = null;
+
+  
+
+    //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+    socket.broadcast.emit('nicknames', nicknames);
+    });
+
+
+    });
+
+    socket.on('logout', function(nickvalue) {
+
+      delete nicknames[nickvalue];
+      //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+      socket.broadcast.emit('nicknames', nicknames);
+      console.log(nicknames)
+    })
+
+  });
+ });
+*/
+
+
   var fs = require('fs'),
     path = require('path'),
     sio = require('socket.io'),
@@ -47,8 +174,8 @@
       for (var i = 0; i < endpoints.length ; i++) {
             
         request.put({
-          url:     endpoints[i],
-          body:    "version=" + new Date().getTime()
+          url: endpoints[i],
+          body: "version=" + new Date().getTime()
         }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               console.log(body)
@@ -130,30 +257,4 @@
     });
   });
 
-// hacemos referencia a la dependencia
-var MongoClient = require('mongodb').MongoClient;
- 
-//Conexion con MongoDB -> servidor:puerto/nombreBasedeDatos
-MongoClient.connect('mongodb://localhost:27017/chatfox', function(err,db){
-        if(err) throw err;
-
-        db.createCollection("usuarios")
-
- //Vamos a mostrar los vendedores que hayan vendido una fregona.
-
- 
-        var coleccion = db.collection('usuarios');
-
-        
- 
- //Creamos el cursos con que cumpla la condición que indicamos en la variable query
-        var cursor = coleccion.find();
- 
- //Recorremos el cursos y ostramos cada documento
-        cursor.each(function(err, item) {
-                if(item != null) console.dir(item);
-  // Si no existen mas item que mostrar, cerramos la conexión con con Mongo.
-                else db.close();
-        });
-});
 

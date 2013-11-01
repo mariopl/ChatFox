@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.103:8443/manifest.webapp');
     }
   }
   });
@@ -31,7 +31,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.103:8443');
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -61,6 +61,7 @@
 
   socket.on('reconnecting', function () {
     message('ChatFox', 'Intentando conectarse al servidor');
+    location.reload(true);
     $('#send-message').css('visibility', 'hidden');
   });
 
@@ -69,10 +70,11 @@
     location.reload(true);
   });
 
-  socket.on('button enabled', function() {
-    //alert('nick recibido');
+  socket.on('button enabled', function(nickvalue) {
+    localStorage.nickvalue = nickvalue;
     $('#send-message').css('visibility', 'visible');
-  })
+    $('#set-nickname').css('visibility', 'hidden');
+  });
 
   function message (from, msg) {
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
@@ -97,24 +99,26 @@
   //
   $(function () {
     
-    var nick = localStorage.nick || null;
+    var nickvalue = localStorage.nickvalue || null;
+    //var nick = localStorage.nick || null;
     $('#set-nickname').css('visibility', 'hidden');
 
-    if(!nick) {
+    if(!nickvalue) {
       $('#set-nickname').css('visibility', 'visible');
       $('#set-nickname').submit(function (ev) {
         if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-          || ($('#nick').val() == "    " || ($('#nick').val() == "     "))) {
+          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null")|| ($('#nick').val() == "ChatFox")) {
           alert('Please, write your nickname');
           clearNickname();
           $('#set-nickname').css('visibility', 'visible');
           return;
 
         }
-      var socket = io.connect('http://localhost:8443');
-        socket.emit('nickname', $('#nick').val(), function (set) {
-          var nick = localStorage.nick = $('#nick').val();
-          $('#set-nickname').css('visibility', 'hidden');
+      var socket = io.connect('http://192.168.1.103:8443');
+      nickvalue = $('#nick').val();
+        socket.emit('nickname', nickvalue, function (set) {
+          //var nick = localStorage.nick = $('#nick').val();
+          //$('#set-nickname').css('visibility', 'hidden');
   
           if (!set) {
             clear();
@@ -127,10 +131,10 @@
       } else {
 
 
-      var nick = localStorage.nick;
-      var socket = io.connect('http://localhost:8443');
+      //var nick = localStorage.nick;
+      var socket = io.connect('http://192.168.1.103:8443');
 
-      socket.emit('nickname', nick, function (set) {
+      socket.emit('nickname', nickvalue, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
         if (!set) {
             clear();
@@ -186,8 +190,8 @@
   
   document.querySelector('#btn-logout').addEventListener ('click', function () {
     
-    var socket = io.connect('http://localhost:8443');
-    var nickvalue = localStorage.nick;
+    var socket = io.connect('http://192.168.1.103:8443');
+    var nickvalue = localStorage.nickvalue;
     socket.emit('logout', nickvalue);
     login();
   });
@@ -199,24 +203,24 @@
   });
 
   function login () {
-    //var nick = localStorage.nick || null;
+    var nickvalue = localStorage.nickvalue || null;
     $('#set-nickname').css('visibility', 'visible');
 
-    if(!nick) {
+    if(!nickvalue) {
       $('#set-nickname').css('visibility', 'visible');
       $('#set-nickname').submit(function (ev) {
         if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-          || ($('#nick').val() == "    " || ($('#nick').val() == "     "))) {
+          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null") || ($('#nick').val() == "ChatFox"))  {
           alert('Please, write your nickname');
           clearNickname();
           $('#set-nickname').css('visibility', 'visible');
           return;
 
         }
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.103:8443');
+        nickvalue = $('#nick').val();
         socket.emit('nickname', $('#nick').val(), function (set) {
-          var nick = localStorage.nick = $('#nick').val();
-          $('#set-nickname').css('visibility', 'hidden');
+          //$('#set-nickname').css('visibility', 'hidden');
           if (!set) {
             clear();
             return $('#chat').addClass('nickname-set');
@@ -227,12 +231,9 @@
       });
       } else {
 
-
-      
-      var nick = localStorage.nick;
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.103:8443');
      
-      socket.emit('nickname', nick, function (set) {
+      socket.emit('nickname', nickvalue, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
         if (!set) {
             clear();
