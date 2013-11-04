@@ -16,8 +16,6 @@ console.log("Connected to Database");
   app.listen(8443);
 
   var file = new static.Server(path.join(__dirname,'/'));
-  
-  server = 'http://192.168.1.103:8443'
 
   function handler(req, res) {
     file.serve(req, res);
@@ -50,20 +48,20 @@ console.log("Connected to Database");
       this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
         socket.broadcast.emit('user message', socket.nickname, msg);
         //desde aquí despertamos a a través de los endpoints
-        for (var i = 0; i < endpoints.length ; i++) {
+        // for (var i = 0; i < endpoints.length ; i++) {
               
-          request.put({
-            url:     endpoints[i],
-            body:    "version=" + new Date().getTime()
-          }, function (error, response, body) {
-              if (!error && response.statusCode == 200) {
-                console.log(body)
-              }
-              });
+        //   request.put({
+        //     url:     endpoints[i],
+        //     body:    "version=" + new Date().getTime()
+        //   }, function (error, response, body) {
+        //       if (!error && response.statusCode == 200) {
+        //         console.log(body)
+        //       }
+        //       });
 
-          this.log.debug('Waking up ' + endpoints[i]);
+        //   this.log.debug('Waking up ' + endpoints[i]);
 
-        }
+        // }
       });
 
         socket.on('user endpoint', function(endpoint){
@@ -80,9 +78,25 @@ console.log("Connected to Database");
         
         });
 
+      socket.on('nicknamerecovery', function(nick) {
+
+        nicknames[nick] = socket.nickname = nick;
+        io.sockets.emit('nicknames', nicknames);
+
+      });
+
+      socket.on('logout', function(nickvalue) {
+
+          delete nicknames[nickvalue];
+          //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
+          socket.broadcast.emit('nicknames', nicknames);
+          exit(nickvalue);
+
+      });
+
 
       socket.on('nickname', function (nick, fn) {
-        prueba1(nick, socket.endpoint);
+        save(nick, socket.endpoint);
         
           var new_user = new db.User({nick: nick, endpoint: socket.endpoint});
 
@@ -127,28 +141,12 @@ console.log("Connected to Database");
         socket.broadcast.emit('nicknames', nicknames);
         });
 
-        socket.on('logout', function(nickvalue) {
-
-          delete nicknames[nickvalue];
-          //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
-          socket.broadcast.emit('nicknames', nicknames);
-          prueba3(nickvalue);
-
-        })
       });
   });
 
 
-
-
- dbs.collection('usuarios', function(err,collection){
-doc = {"nick": 'paquito'};
-collection.insert(doc, function(){});
-console.log(doc)
-});
-
-function prueba1(nickdata, endpoint) {
-  console.log('llamada a la funcion prueba1 que registra');
+function save(nickdata, endpoint) {
+  console.log('llamada a la funcion save que registra');
 
       dbs.collection('usuarios', function(err,collection){
       doc = {"nick": nickdata, "endpoint": endpoint};
@@ -159,13 +157,35 @@ function prueba1(nickdata, endpoint) {
 
  function prueba2() {
   
-  dbs.collection('usuarios', function(err,collection){
-      doc = {"nick": 'pc'};
-      collection.find(doc, function(){});
-    });
- }
+  var collection = dbs.collection('usuarios')
+    .find({},{endpoint:1, _id:0})
+    .limit(10)
+    .toArray(function(err, docs) {
+      var array = docs;
+      //console.dir(array)
+      //console.log(docs[1].endpoint)
+      //console.dir('esto deberia devolver el nick   ' + docs[0])
 
- function prueba3(nickvalue) {
+      for (var i = 0; i < docs.length ; i++) {
+        console.log('---------inicio del for')
+              
+          request.put({
+            url:     docs[i].endpoint,
+            body:    "version=" + new Date().getTime()
+          }, function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                console.log(body)
+              }
+              });
+
+          console.log('Waking up ' + docs[i].endpoint);
+
+        }
+    });
+
+  }
+
+ function exit(nickvalue) {
   
   dbs.collection('usuarios', function(err,collection){
       doc = {"nick": nickvalue};
