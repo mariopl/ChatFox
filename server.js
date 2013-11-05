@@ -37,7 +37,7 @@ console.log("Connected to Database");
 
 
       socket.on('user message', function (msg) {
-        prueba2();
+        prueba2(socket.endpoint);
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -142,7 +142,7 @@ console.log("Connected to Database");
         });
 
       });
-  });
+  //});
 
 
 function save(nickdata, endpoint) {
@@ -155,20 +155,18 @@ function save(nickdata, endpoint) {
       });
 }
 
- function prueba2() {
-  
+ function prueba2(myEndpoint) {
+
+  console.log('--------mi endpoint es  ' + myEndpoint)
   var collection = dbs.collection('usuarios')
     .find({},{endpoint:1, _id:0})
     .limit(10)
     .toArray(function(err, docs) {
       var array = docs;
-      //console.dir(array)
-      //console.log(docs[1].endpoint)
-      //console.dir('esto deberia devolver el nick   ' + docs[0])
-
       for (var i = 0; i < docs.length ; i++) {
-        console.log('---------inicio del for')
-              
+        if(docs[i].endpoint == socket.endpoint){
+          console.log('mi endpoint ha sido encontrado ' + socket.endpoint)
+        } else {
           request.put({
             url:     docs[i].endpoint,
             body:    "version=" + new Date().getTime()
@@ -179,7 +177,7 @@ function save(nickdata, endpoint) {
               });
 
           console.log('Waking up ' + docs[i].endpoint);
-
+          }
         }
     });
 
@@ -193,4 +191,5 @@ function save(nickdata, endpoint) {
       console.log('ELIMINADO ' + doc)
       });
  }
+});
 });
