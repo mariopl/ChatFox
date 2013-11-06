@@ -29,9 +29,12 @@ var Push = (function() {
 
   //Listen to push notifications
   if (navigator.push) {
+
+    socket.on('info', function(socketnickname, msg) {
+    
     window.navigator.mozSetMessageHandler('push', function() {
     
-      var notification = navigator.mozNotification.createNotification("ChatFox", "Nuevo mensaje de chat");
+      var notification = navigator.mozNotification.createNotification(socketnickname, msg);
     
       notification.show();
 
@@ -44,6 +47,7 @@ var Push = (function() {
 
       localStorage.notificationsReceived++;
     }
+    });
     });
   }
 

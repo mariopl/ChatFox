@@ -37,7 +37,7 @@ console.log("Connected to Database");
 
 
       socket.on('user message', function (msg) {
-        prueba2(socket.endpoint);
+        prueba2(socket.endpoint, msg);
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -155,9 +155,9 @@ function save(nickdata, endpoint) {
       });
 }
 
- function prueba2(myEndpoint) {
+ function prueba2(myEndpoint, msg) {
 
-  console.log('--------mi endpoint es  ' + myEndpoint)
+  socket.broadcast.emit('info', socket.nickname, msg);
   var collection = dbs.collection('usuarios')
     .find({},{endpoint:1, _id:0})
     .limit(10)
