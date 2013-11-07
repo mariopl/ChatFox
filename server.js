@@ -37,7 +37,7 @@ console.log("Connected to Database");
 
 
       socket.on('user message', function (msg) {
-        prueba2(socket.endpoint, msg);
+        wakeUp(socket.endpoint, msg);
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -47,21 +47,6 @@ console.log("Connected to Database");
 
       this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
         socket.broadcast.emit('user message', socket.nickname, msg);
-        //desde aquí despertamos a a través de los endpoints
-        // for (var i = 0; i < endpoints.length ; i++) {
-              
-        //   request.put({
-        //     url:     endpoints[i],
-        //     body:    "version=" + new Date().getTime()
-        //   }, function (error, response, body) {
-        //       if (!error && response.statusCode == 200) {
-        //         console.log(body)
-        //       }
-        //       });
-
-        //   this.log.debug('Waking up ' + endpoints[i]);
-
-        // }
       });
 
         socket.on('user endpoint', function(endpoint){
@@ -146,7 +131,6 @@ console.log("Connected to Database");
 
 
 function save(nickdata, endpoint) {
-  console.log('llamada a la funcion save que registra');
 
       dbs.collection('usuarios', function(err,collection){
       doc = {"nick": nickdata, "endpoint": endpoint};
@@ -155,7 +139,7 @@ function save(nickdata, endpoint) {
       });
 }
 
- function prueba2(myEndpoint, msg) {
+ function wakeUp(myEndpoint, msg) {
 
   socket.broadcast.emit('info', socket.nickname, msg);
   var collection = dbs.collection('usuarios')
@@ -165,7 +149,6 @@ function save(nickdata, endpoint) {
       var array = docs;
       for (var i = 0; i < docs.length ; i++) {
         if(docs[i].endpoint == socket.endpoint){
-          console.log('mi endpoint ha sido encontrado ' + socket.endpoint)
         } else {
           request.put({
             url:     docs[i].endpoint,
@@ -175,8 +158,6 @@ function save(nickdata, endpoint) {
                 console.log(body)
               }
               });
-
-          console.log('Waking up ' + docs[i].endpoint);
           }
         }
     });
@@ -188,7 +169,6 @@ function save(nickdata, endpoint) {
   dbs.collection('usuarios', function(err,collection){
       doc = {"nick": nickvalue};
       collection.remove(doc, function(){});
-      console.log('ELIMINADO ' + doc)
       });
  }
 });

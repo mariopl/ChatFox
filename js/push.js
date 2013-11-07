@@ -14,10 +14,12 @@ var Push = (function() {
     	  var endpoint = localStorage.endpoint = req.result;
         var socket = io.connect('http://localhost:8443');
         socket.emit('user endpoint', endpoint); 
+        console.log('---------CHATFOX-------- Endpoint successfully registered: ' + endpoint);
     	}
     	
     	req.onerror = function(e) {
          alert("Error getting a new endpoint: " + JSON.stringify(e));
+         console.log('---------CHATFOX-------- Error getting the endpoint');
       }
     } 
   } else {
@@ -28,15 +30,22 @@ var Push = (function() {
   }
 
   //Listen to push notifications
+  var socket = io.connect('http://localhost:8443');
+  socket.on('info', function(socketnickname, msg) {
   if (navigator.push) {
 
-    socket.on('info', function(socketnickname, msg) {
+    console.log('---------CHATFOX-------- Notification from ' + socketnickname);
     
     window.navigator.mozSetMessageHandler('push', function() {
     
       var notification = navigator.mozNotification.createNotification(socketnickname, msg);
     
       notification.show();
+
+      notification.onclick = function onclick() {
+        forgetNotification();
+        app.launch();
+      };
 
       if (!localStorage.notificationsReceived) {
 
@@ -48,7 +57,7 @@ var Push = (function() {
       localStorage.notificationsReceived++;
     }
     });
-    });
   }
+  });
 
 });

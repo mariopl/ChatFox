@@ -132,8 +132,7 @@
       var socket = io.connect('http://localhost:8443');
 
       socket.emit('nicknamerecovery', nick, function (set) {
-        //$('#set-nickname').css('visibility', 'hidden');
-        if (!set) {
+           if (!set) {
             clear();
             return $('#chat').addClass('nickname-set');
           }
