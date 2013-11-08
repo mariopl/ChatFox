@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.57:8443/manifest.webapp');
     }
   }
   });
@@ -52,6 +52,10 @@
 
   socket.on('user message', message, function() {
   });
+
+  socket.on('message from twitter', function(tweet) {
+    tweets(tweet);
+  });
   
   socket.on('reconnect', function () {
     $('#lines').remove();
@@ -77,6 +81,13 @@
 
   function message (from, msg) {
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
+    if (localStorage.messagesReceived) {
+      localStorage.messagesReceived++;
+    }
+  }
+
+  function tweets (tweet) {
+    $('#lines').append($('<p>').append($('<b>').text('@OpenWebDevice'), tweet));
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }

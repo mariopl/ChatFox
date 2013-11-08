@@ -6,7 +6,16 @@
     db = require('./js/db.js');
     push = require('./js/push.js');
     request = require('request');
-    MongoClient = require('mongodb').MongoClient;
+    MongoClient = require('mongodb').MongoClient
+
+var Stream = require('user-stream');
+var stream = new Stream({
+    consumer_key: 'PwyqI38WcK6AwlwOY6qzbw',
+    consumer_secret: 'F524X1qT4Pu6uyKtGSiN3TyOs6cMA9R36ajXGrQdis',
+    access_token_key: '2182024027-3IPrwww5sT9sDuyMO1yErBEKyRC0XgghCSL3Wu9',
+    access_token_secret: 'OLva8koa0Og6XV5HNzPEmDXqhNOds4QaaHL5oWLb6quUw'
+});
+
 
   MongoClient.connect('mongodb://127.0.0.1:27017/chatfox', function(err, dbs) {
 if (err) throw err;
@@ -27,6 +36,19 @@ console.log("Connected to Database");
     recent_messages = [];
 
   io.sockets.on('connection', function (socket) {
+
+        //create stream
+        stream.stream();
+
+        //listen stream data
+        stream.on('data', function(json) {
+          var tweet = json.text;
+          //io.sockets.emit('tweet', tweet);
+          if (tweet != undefined){
+          socket.emit('message from twitter', tweet);
+          console.log(tweet)
+        }
+        });
 
       if (recent_messages.length > 0) {
       
