@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.57:8443/manifest.webapp');
+        .install('http://localhost:8443/manifest.webapp');
     }
   }
   });
@@ -33,9 +33,25 @@
 
   var socket = io.connect('http://localhost:8443');
 
+
   socket.on('connect', function () {
     $('#chat').addClass('connected');
+    socket.emit('ping');
   });
+
+  socket.on('pong', function (tweet) {
+
+    setTimeout('ping()', 60000);
+  });
+
+  socket.on('pongTweet', function (tweet) {
+    message('@OpenWebDevice', tweet);
+    setTimeout('ping()', 60000);
+  });
+
+  function ping() {
+    socket.emit('ping');
+  }
 
    socket.on('announcement', function (nick, msg) {
     $('#lines').append($('<p>').append($('<b>').text(nick), msg));
@@ -53,7 +69,7 @@
   socket.on('user message', message, function() {
   });
 
-  socket.on('message from twitter', function(tweet) {
+  socket.on('twitter message', function(tweet) {
     tweets(tweet);
   });
   
@@ -75,7 +91,6 @@
   });
 
   socket.on('button enabled', function() {
-    //alert('nick recibido');
     $('#send-message').css('visibility', 'visible');
   })
 
@@ -91,17 +106,6 @@
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
-  }
-
-  function timer() {
-    setTimeout("enable()",10000);
-    alert(localStorage.nick);
-  }
-
-  function enable() {
-
-    $('#send-message').css('visibility', 'visible');
-
   }
 
   //

@@ -5,6 +5,8 @@ and register in push server
 var Push = (function() {	
   //Now we call push.register() to request an endpoint
   var endpoint = localStorage.endpoint || null;
+  var socket = io.connect('http://localhost:8443');
+
 
   if(!endpoint){
     if (navigator.push) {
@@ -12,7 +14,6 @@ var Push = (function() {
     	
     	req.onsuccess = function(e) {
     	  var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://192.168.1.57:8443');
         socket.emit('user endpoint', endpoint); 
         console.log('---------CHATFOX-------- Endpoint successfully registered: ' + endpoint);
     	}
@@ -25,12 +26,19 @@ var Push = (function() {
   } else {
 
     var endpoint = localStorage.endpoint;
-    var socket = io.connect('http://192.168.1.57:8443');
         socket.emit('user endpoint', endpoint); 
   }
 
   //Listen to push notifications
-  var socket = io.connect('http://192.168.1.57:8443');
+  socket.on('pongPush', function (tweet) {
+
+    setTimeout('pingPush()', 300000);
+  });
+
+  function pingPush() {
+    socket.emit('ping');
+  }
+
   socket.on('info', function(socketnickname, msg) {
   if (navigator.push) {
 

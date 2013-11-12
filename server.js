@@ -2,10 +2,10 @@
   var fs = require('fs'),
     path = require('path'),
     sio = require('socket.io'),
-    static = require('node-static');
-    db = require('./js/db.js');
-    push = require('./js/push.js');
-    request = require('request');
+    static = require('node-static'),
+    db = require('./js/db.js'),
+    push = require('./js/push.js'),
+    request = require('request'),
     MongoClient = require('mongodb').MongoClient
 
 var Stream = require('user-stream');
@@ -33,33 +33,42 @@ console.log("Connected to Database");
   var io = sio.listen(app),
     nicknames = {},
     endpoints = [],
-    recent_messages = [];
+    tweet = null,
+    lastTweet = null,
+    recent_messages = [],
+    i = -1;
+
+  stream.stream();
+
+    stream.on('data', function(json) {
+      tweet = json.text;
+        if (tweet != undefined){
+          console.log(tweet)
+      
+        };
+    });
 
   io.sockets.on('connection', function (socket) {
 
-        //create stream
-        stream.stream();
-
-        //listen stream data
-        stream.on('data', function(json) {
-          var tweet = json.text;
-          //io.sockets.emit('tweet', tweet);
-          if (tweet != undefined){
-          socket.emit('message from twitter', tweet);
-          console.log(tweet)
+    socket.on('ping', function () {
+          console.log('ping');
+          
+          if (tweet != lastTweet || undefined || null) {
+          socket.emit('pongTweet', tweet);
+          lastTweet = tweet;
+          wakeUp(null, tweet, '@OpenWebDevice');
+        } else {
+          socket.emit('pong');
         }
-        });
+    });
 
-      if (recent_messages.length > 0) {
-      
-      for (i in recent_messages) {
-        socket.emit('announcement', recent_messages[i].nick, recent_messages[i].msg);
-      }
-    }
+    socket.on('pingPush', function() {
+      socket.emit('pongPush');
+    })
 
-
+     
       socket.on('user message', function (msg) {
-        wakeUp(socket.endpoint, msg);
+        wakeUp(socket.endpoint, msg, socket.nickname);
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -77,12 +86,8 @@ console.log("Connected to Database");
         endpoints.push(endpoint);
         this.log.debug(endpoints);
         this.log.debug(endpoints.length);
-        function eliminateDuplicates(endpoints) {
+        socket.emit('pongPush');
 
-          this.log.debug('eliminateDuplicates');
-        }
-      
-        
         });
 
       socket.on('nicknamerecovery', function(nick) {
@@ -161,9 +166,9 @@ function save(nickdata, endpoint) {
       });
 }
 
- function wakeUp(myEndpoint, msg) {
+ function wakeUp(myEndpoint, msg, issuing) {
 
-  socket.broadcast.emit('info', socket.nickname, msg);
+  socket.broadcast.emit('info', issuing, msg);
   var collection = dbs.collection('usuarios')
     .find({},{endpoint:1, _id:0})
     .limit(10)
@@ -193,5 +198,23 @@ function save(nickdata, endpoint) {
       collection.remove(doc, function(){});
       });
  }
+
 });
 });
+
+
+// stream.stream();
+
+//     stream.on('data', function(json) {
+//       //var tweet = json.text;
+//       var tweet = 'ejemplo';
+//       //var lastTweet = null;
+//         if (tweet != undefined && tweet != lastTweet){
+//         var lastTweet = tweet;
+//           //socket.emit('twitter message', tweet);
+//           console.log('aquí sí emito')
+//           console.log(lastTweet)
+//         };
+//     });
+
+
