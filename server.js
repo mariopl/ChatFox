@@ -35,6 +35,7 @@ console.log("Connected to Database");
     endpoints = [],
     tweet = null,
     lastTweet = null,
+    count = null,
     recent_messages = [],
     i = -1;
 
@@ -43,30 +44,23 @@ console.log("Connected to Database");
     stream.on('data', function(json) {
       tweet = json.text;
         if (tweet != undefined){
-          console.log(tweet)
-      
-        };
-    });
+          count = (json.user && json.user.screen_name) || 'Message from Twitter';
+          console.log(count);
+        
 
-  io.sockets.on('connection', function (socket) {
-
-    socket.on('ping', function () {
-          console.log('ping');
-          
-          if (tweet != lastTweet || undefined || null) {
-          socket.emit('pongTweet', tweet);
-          lastTweet = tweet;
-          wakeUp(null, tweet, '@OpenWebDevice');
-        } else {
-          socket.emit('pong');
         }
     });
 
-    socket.on('pingPush', function() {
-      socket.emit('pongPush');
-    })
 
-     
+  io.sockets.on('connection', function (socket) {
+
+    if (recent_messages.length > 0) {
+      
+      for (i in recent_messages) {
+        socket.emit('announcement', recent_messages[i].nick, recent_messages[i].msg);
+      }
+    }
+
       socket.on('user message', function (msg) {
         wakeUp(socket.endpoint, msg, socket.nickname);
 
@@ -80,13 +74,34 @@ console.log("Connected to Database");
         socket.broadcast.emit('user message', socket.nickname, msg);
       });
 
+      socket.on('ping', function () {
+          console.log('ping');
+          
+          if (tweet != lastTweet || undefined || null) {
+          //socket.broadcast.emit('pongTweet', count, tweet);
+          sendTweet(count, tweet);
+          socket.emit('origin', count, tweet);
+          lastTweet = tweet;
+          wakeUp(null, tweet, '@'+count);
+           if (recent_messages.length > 8) {
+        recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
+        }
+        recent_messages.push({nick: '@'+count, msg: tweet});
+
+  
+          
+        } else {
+          sendPong();
+          //socket.broadcast.emit('pong');
+        }
+      });
+
         socket.on('user endpoint', function(endpoint){
         //endpoints[endpoint] = socket.endpoint = endpoint;
         socket.endpoint = endpoint;
         endpoints.push(endpoint);
         this.log.debug(endpoints);
         this.log.debug(endpoints.length);
-        socket.emit('pongPush');
 
         });
 
@@ -156,6 +171,13 @@ console.log("Connected to Database");
       });
   //});
 
+function sendTweet(count, tweet) {
+  socket.broadcast.emit('pongTweet', count, tweet);
+}
+
+function sendPong() {
+  socket.emit('pong');
+}
 
 function save(nickdata, endpoint) {
 

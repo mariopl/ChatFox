@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.57:8443/manifest.webapp');
     }
   }
   });
@@ -31,7 +31,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.57:8443');
 
 
   socket.on('connect', function () {
@@ -39,14 +39,19 @@
     socket.emit('ping');
   });
 
-  socket.on('pong', function (tweet) {
+  socket.on('pong', function () {
 
-    setTimeout('ping()', 60000);
+    setTimeout('ping()', 30000);
   });
 
-  socket.on('pongTweet', function (tweet) {
-    message('@OpenWebDevice', tweet);
-    setTimeout('ping()', 60000);
+  socket.on('pongTweet', function (count, tweet) {
+    tweets('@'+count, tweet);
+    setTimeout('ping()', 30000);
+  });
+
+  socket.on('origin', function(count, tweet) {
+    tweets('@'+count, tweet);
+    setTimeout('ping()', 30000);
   });
 
   function ping() {
@@ -69,10 +74,6 @@
   socket.on('user message', message, function() {
   });
 
-  socket.on('twitter message', function(tweet) {
-    tweets(tweet);
-  });
-  
   socket.on('reconnect', function () {
     $('#lines').remove();
     message('ChatFox', 'Reconectado al servidor');
@@ -101,8 +102,8 @@
     }
   }
 
-  function tweets (tweet) {
-    $('#lines').append($('<p>').append($('<b>').text('@OpenWebDevice'), tweet));
+  function tweets (count, tweet) {
+    $('#lines').append($('<p>').append($('<b>').text(count), tweet));
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
@@ -127,7 +128,7 @@
           return;
 
         }
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.57:8443');
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
@@ -144,7 +145,7 @@
 
 
       var nick = localStorage.nick;
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.57:8443');
 
       socket.emit('nicknamerecovery', nick, function (set) {
            if (!set) {
@@ -202,7 +203,7 @@
   
   document.querySelector('#btn-logout').addEventListener ('click', function () {
     
-    var socket = io.connect('http://localhost:8443');
+    var socket = io.connect('http://192.168.1.57:8443');
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
     login();
@@ -229,7 +230,7 @@
           return;
 
         }
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.57:8443');
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
@@ -246,7 +247,7 @@
 
       
       var nick = localStorage.nick;
-      var socket = io.connect('http://localhost:8443');
+      var socket = io.connect('http://192.168.1.57:8443');
      
       socket.emit('nicknamerecovery', nick, function (set) {
         //$('#set-nickname').css('visibility', 'hidden');
