@@ -98,7 +98,16 @@
   })
 
   function message (from, msg) {
-    $('#lines').append($('<p>').append($('<b>').text(from), msg));
+    var d = new Date();
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth() + 1;
+    var curr_year = d.getFullYear();
+    var curr_hour = d.getHours();
+    var curr_minute = d.getMinutes();
+
+    $('#lines').append($('<p>').append($('<b>').text(curr_date + '/' + curr_month + '/'
+                                   + curr_year + ' ' + curr_hour + ':' + curr_minute + ' ' + from), msg));
+    $('#lines').get(0).scrollTop = 10000000;
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
@@ -106,6 +115,7 @@
 
   function tweets (count, tweet) {
     $('#lines').append($('<p>').append($('<b>').text(count), tweet));
+    $('#lines').get(0).scrollTop = 10000000;
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
@@ -205,7 +215,7 @@
     
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
-    localStorage.clear();
+    localStorage.removeItem(nick);
     clear();
     login();
   });
