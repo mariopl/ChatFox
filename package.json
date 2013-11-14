@@ -8,6 +8,7 @@
     "node-static": "*",
     "mongoose":"*",
     "request": "*",
+    "user-stream": "*",
     "mongodb": "*"
   },
   "engines": {
