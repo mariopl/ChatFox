@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.57:8443/manifest.webapp');
+        .install('http://localhost:8443/manifest.webapp');
     }
   }
   });
@@ -31,7 +31,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://192.168.1.57:8443');
+  var socket = io.connect('http://localhost:8443');
 
 
   socket.on('connect', function () {
@@ -41,17 +41,17 @@
 
   socket.on('pong', function () {
 
-    setTimeout('ping()', 30000);
+    setTimeout('ping()', 300000);
   });
 
   socket.on('pongTweet', function (count, tweet) {
     tweets('@'+count, tweet);
-    setTimeout('ping()', 30000);
+    setTimeout('ping()', 300000);
   });
 
   socket.on('origin', function(count, tweet) {
     tweets('@'+count, tweet);
-    setTimeout('ping()', 30000);
+    setTimeout('ping()', 300000);
   });
 
   function ping() {
@@ -75,20 +75,22 @@
   });
 
   socket.on('reconnect', function () {
-    $('#lines').remove();
-    message('ChatFox', 'Reconectado al servidor');
-    location.reload(true);
+    //$('#lines').remove();
+    //message('ChatFox', 'Reconectado al servidor');
+      location.reload(true);
+    
   });
 
   socket.on('reconnecting', function () {
-    message('ChatFox', 'Intentando conectarse al servidor');
-    location.reload(true);
+    //message('ChatFox', 'Intentando conectarse al servidor');
+      location.reload(true);
     $('#send-message').css('visibility', 'hidden');
   });
 
   socket.on('error', function (e) {
-    message('ChatFox', e ? e : 'Algo falla, prueba a reiniciar la app');
-    location.reload(true);
+    //message('ChatFox', e ? e : 'Algo falla, prueba a reiniciar la app');
+      alert('You need an internet connection');
+      location.reload(true); 
   });
 
   socket.on('button enabled', function() {
@@ -128,7 +130,6 @@
           return;
 
         }
-      var socket = io.connect('http://192.168.1.57:8443');
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
@@ -145,7 +146,6 @@
 
 
       var nick = localStorage.nick;
-      var socket = io.connect('http://192.168.1.57:8443');
 
       socket.emit('nicknamerecovery', nick, function (set) {
            if (!set) {
@@ -203,9 +203,10 @@
   
   document.querySelector('#btn-logout').addEventListener ('click', function () {
     
-    var socket = io.connect('http://192.168.1.57:8443');
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
+    localStorage.clear();
+    clear();
     login();
   });
 
@@ -216,24 +217,24 @@
   });
 
   function login () {
-    //var nick = localStorage.nick || null;
-    $('#set-nickname').css('visibility', 'visible');
+    var nick = null;
 
-    if(!nick) {
-      $('#set-nickname').css('visibility', 'visible');
+    $('#set-nickname').css('visibility', 'visible');
       $('#set-nickname').submit(function (ev) {
         if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null") || ($('#nick').val() == "ChatFox"))  {
+          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null")|| ($('#nick').val() == "ChatFox")) {
           alert('Please, write your nickname');
           clearNickname();
           $('#set-nickname').css('visibility', 'visible');
           return;
 
         }
-      var socket = io.connect('http://192.168.1.57:8443');
-        socket.emit('nickname', $('#nick').val(), function (set) {
+        for (var i = 1; i < 1; i++) {
+            
+          socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
           $('#set-nickname').css('visibility', 'hidden');
+  
           if (!set) {
             clear();
             return $('#chat').addClass('nickname-set');
@@ -241,23 +242,6 @@
           $('#nickname-err').css('visibility', 'visible');
         });
         return false;
-      });
-      } else {
-
-
-      
-      var nick = localStorage.nick;
-      var socket = io.connect('http://192.168.1.57:8443');
-     
-      socket.emit('nicknamerecovery', nick, function (set) {
-        //$('#set-nickname').css('visibility', 'hidden');
-        if (!set) {
-            clear();
-            return $('#chat').addClass('nickname-set');
-          }
-          $('#nickname-err').css('visibility', 'visible');
-        });
-      
-        return false;
-      
-    }};
+      }
+      });  
+    }

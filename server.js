@@ -173,10 +173,12 @@ console.log("Connected to Database");
 
 function sendTweet(count, tweet) {
   socket.broadcast.emit('pongTweet', count, tweet);
+  socket.broadcast.emit('nicknames', nicknames);
 }
 
 function sendPong() {
   socket.emit('pong');
+  socket.broadcast.emit('nicknames', nicknames);
 }
 
 function save(nickdata, endpoint) {

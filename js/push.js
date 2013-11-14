@@ -5,7 +5,7 @@ and register in push server
 var Push = (function() {	
   //Now we call push.register() to request an endpoint
   var endpoint = localStorage.endpoint || null;
-  var socket = io.connect('http://192.168.1.57:8443');
+  var socket = io.connect('http://localhost:8443');
 
 
   if(!endpoint){
