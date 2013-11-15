@@ -62,12 +62,15 @@
     $('#lines').append($('<p>').append($('<b>').text(nick), msg));
   }); 
 
-  socket.on('nicknames', function (nicknames) {
+  socket.on('nicknames', function (online) {
     $('#nicknames').empty().append($('<span>Connected: </span>'));
     $('#nicknamesView').empty();
-    for (var i in nicknames) {
-      $('#nicknames').append($('<b>').text(nicknames[i]));
-      $('#nicknamesView').append($('<li>').append($('<p>').text(nicknames[i])));
+    for (var i in online) {
+      if (online[i] != undefined){
+      $('#nicknames').append($('<b>').text(online[i]));
+      $('#nicknamesView').append($('<li>').append($('<p>').text(online[i])));
+    }
+
     }
   });
 
@@ -98,15 +101,14 @@
   })
 
   function message (from, msg) {
-    var d = new Date();
-    var curr_date = d.getDate();
-    var curr_month = d.getMonth() + 1;
-    var curr_year = d.getFullYear();
-    var curr_hour = d.getHours();
-    var curr_minute = d.getMinutes();
+    // var d = new Date();
+    // var curr_date = d.getDate();
+    // var curr_month = d.getMonth() + 1;
+    // var curr_year = d.getFullYear();
+    // var curr_hour = d.getHours();
+    // var curr_minute = d.getMinutes();
 
-    $('#lines').append($('<p>').append($('<b>').text(curr_date + '/' + curr_month + '/'
-                                   + curr_year + ' ' + curr_hour + ':' + curr_minute + ' ' + from), msg));
+    $('#lines').append($('<p>').append($('<b>').text(from), msg));
     $('#lines').get(0).scrollTop = 10000000;
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
@@ -215,9 +217,10 @@
     
     var nickvalue = localStorage.nick;
     socket.emit('logout', nickvalue);
-    localStorage.removeItem(nick);
+    localStorage.nick = '';
     clear();
-    login();
+    reinicio();
+    
   });
 
   document.querySelector('#btn-statistics').addEventListener ('click', function () {
@@ -226,32 +229,7 @@
 
   });
 
-  function login () {
-    var nick = null;
 
-    $('#set-nickname').css('visibility', 'visible');
-      $('#set-nickname').submit(function (ev) {
-        if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-          || ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null")|| ($('#nick').val() == "ChatFox")) {
-          alert('Please, write your nickname');
-          clearNickname();
-          $('#set-nickname').css('visibility', 'visible');
-          return;
-
-        }
-        for (var i = 1; i < 1; i++) {
-            
-          socket.emit('nickname', $('#nick').val(), function (set) {
-          var nick = localStorage.nick = $('#nick').val();
-          $('#set-nickname').css('visibility', 'hidden');
-  
-          if (!set) {
-            clear();
-            return $('#chat').addClass('nickname-set');
-          }
-          $('#nickname-err').css('visibility', 'visible');
-        });
-        return false;
-      }
-      });  
-    }
+  function reinicio() {
+    location.reload(true);
+  }

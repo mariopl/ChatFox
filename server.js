@@ -54,6 +54,8 @@ console.log("Connected to Database");
 
   io.sockets.on('connection', function (socket) {
 
+    console.log('inicio')
+
     if (recent_messages.length > 0) {
       
       for (i in recent_messages) {
@@ -63,6 +65,8 @@ console.log("Connected to Database");
 
       socket.on('user message', function (msg) {
         wakeUp(socket.endpoint, msg, socket.nickname);
+        //console.log(io.sockets.clients().length)
+        online();
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -76,6 +80,7 @@ console.log("Connected to Database");
 
       socket.on('ping', function () {
           console.log('ping');
+          online();
           
           if (tweet != lastTweet || undefined || null) {
           //socket.broadcast.emit('pongTweet', count, tweet);
@@ -108,7 +113,8 @@ console.log("Connected to Database");
       socket.on('nicknamerecovery', function(nick) {
 
         nicknames[nick] = socket.nickname = nick;
-        io.sockets.emit('nicknames', nicknames);
+        //io.sockets.emit('nicknames', nicknames);
+        online();
 
       });
 
@@ -116,8 +122,9 @@ console.log("Connected to Database");
 
           delete nicknames[nickvalue];
           //socket.broadcast.emit('announcement', socket.nickname + ' disconnected');
-          socket.broadcast.emit('nicknames', nicknames);
+          //socket.broadcast.emit('nicknames', nicknames);
           exit(nickvalue);
+          online();
 
       });
 
@@ -173,12 +180,14 @@ console.log("Connected to Database");
 
 function sendTweet(count, tweet) {
   socket.broadcast.emit('pongTweet', count, tweet);
-  socket.broadcast.emit('nicknames', nicknames);
+  //socket.broadcast.emit('nicknames', nicknames);
+  online();
 }
 
 function sendPong() {
   socket.emit('pong');
-  socket.broadcast.emit('nicknames', nicknames);
+  //socket.broadcast.emit('nicknames', nicknames);
+  online();
 }
 
 function save(nickdata, endpoint) {
@@ -223,22 +232,21 @@ function save(nickdata, endpoint) {
       });
  }
 
+ function online() {
+
+  var online = [];
+        for (var i = io.sockets.clients().length - 1; i >= 0; i--) {
+          if( io.sockets.clients()[i].nickname != null ){
+          online[i] = io.sockets.clients()[i].nickname;
+        }
+        };
+
+        console.log(online);
+        socket.emit('nicknames', online);
+        socket.broadcast.emit('nicknames', online);
+
+
+ }
+
 });
 });
-
-
-// stream.stream();
-
-//     stream.on('data', function(json) {
-//       //var tweet = json.text;
-//       var tweet = 'ejemplo';
-//       //var lastTweet = null;
-//         if (tweet != undefined && tweet != lastTweet){
-//         var lastTweet = tweet;
-//           //socket.emit('twitter message', tweet);
-//           console.log('aquí sí emito')
-//           console.log(lastTweet)
-//         };
-//     });
-
-
