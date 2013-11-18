@@ -4,7 +4,6 @@
     sio = require('socket.io'),
     static = require('node-static'),
     db = require('./js/db.js'),
-    push = require('./js/push.js'),
     request = require('request'),
     MongoClient = require('mongodb').MongoClient
 
@@ -67,6 +66,7 @@ console.log("Connected to Database");
         wakeUp(socket.endpoint, msg, socket.nickname);
         //console.log(io.sockets.clients().length)
         online();
+        //console.log(socket.nickname)
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -130,7 +130,7 @@ console.log("Connected to Database");
 
 
       socket.on('nickname', function (nick, fn) {
-        save(nick, socket.endpoint);
+        save(nick, socket.endpoint, socket.id);
         
           var new_user = new db.User({nick: nick, endpoint: socket.endpoint});
 
@@ -190,12 +190,13 @@ function sendPong() {
   online();
 }
 
-function save(nickdata, endpoint) {
+function save(nickdata, endpoint, id) {
 
       dbs.collection('usuarios', function(err,collection){
-      doc = {"nick": nickdata, "endpoint": endpoint};
+      doc = {"nick": nickdata, "endpoint": endpoint, "disconnected": false};
       collection.insert(doc, function(){});
       console.log(doc)
+      console.log(io.sockets.sockets[id])
       });
 }
 
@@ -203,8 +204,7 @@ function save(nickdata, endpoint) {
 
   socket.broadcast.emit('info', issuing, msg);
   var collection = dbs.collection('usuarios')
-    .find({},{endpoint:1, _id:0})
-    .limit(10)
+    .find({ disconnected: false } , {endpoint:1, _id:0}) // .find({ off: true })
     .toArray(function(err, docs) {
       var array = docs;
       for (var i = 0; i < docs.length ; i++) {

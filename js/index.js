@@ -9,9 +9,7 @@
     }
   }
   });
-  
-  Push();
-  
+    
   $(function () {
 
    if (!localStorage.messagesReceived) {
@@ -58,7 +56,7 @@
     socket.emit('ping');
   }
 
-   socket.on('announcement', function (nick, msg) {
+  socket.on('announcement', function (nick, msg) {
     $('#lines').append($('<p>').append($('<b>').text(nick), msg));
   }); 
 
@@ -110,6 +108,16 @@
 
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
     $('#lines').get(0).scrollTop = 10000000;
+
+
+    console.log('---------CHATFOX-------- NOTIFICATION ' + 'EMISOR: ' + from + ' MENSAJE: ' + msg);
+    // if (document.hidden) {
+    //   var notification = navigator.mozNotification.createNotification(from, msg);
+    //   notification.show();
+    //   console.log('notification.show() ejecutado');
+    //   localStorage.notificationsReceived++;
+    // }
+
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
