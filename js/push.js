@@ -32,13 +32,15 @@ var Push = (function() {
   socket.on('info', function(socketnickname, msg) {
   if (navigator.push) {
 
-    console.log('---------CHATFOX-------- Notification from ' + socketnickname);
+    console.log('---------CHATFOX-------- NOTIFICATION ' + 'EMISOR: ' + socketnickname + ' MENSAJE: ' + msg);
     
     window.navigator.mozSetMessageHandler('push', function() {
     
       var notification = navigator.mozNotification.createNotification(socketnickname, msg);
     
       notification.show();
+
+      console.log('notification.show() ejecutado');
 
       notification.onclick = function onclick() {
         forgetNotification();
