@@ -2,19 +2,33 @@
 Class that will allow us to register for push 
 and register in push server
 */
+var emisor = 'Chatfox';
+var msg = 'Nuevo mensaje de chat';
 var Push = (function() {	
 
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
     var socket = io.connect('http://localhost:8443');
 
+    socket.on('info', function(Oemisor, Omsg) {
+
+      emisorinfo = Oemisor;
+      msginfo = Omsg;
+      cambia(emisorinfo, msginfo);
+
+    });
+
+    function cambia(emisorinfo, msginfo) {
+      emisor = emisorinfo;
+      msg = msginfo;
+
+    }
+   
+
   if (navigator.push) {    
     window.navigator.mozSetMessageHandler('push', function() {
-      
-      var from = localStorage.from;
-      var msg = localStorage.msg;
 
-      console.log('-----------------CHATFOX NOTIFICATION---------------- EMISOR: ' + from + ' MENSAJE: ' + msg)
+      console.log('-----------------CHATFOX NOTIFICATION---------------- EMISOR: ' + emisor + ' MENSAJE: ' + msg)
 
       if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
@@ -22,7 +36,7 @@ var Push = (function() {
         localStorage.notificationsReceived++;
       }
       
-      var notification = navigator.mozNotification.createNotification(from, msg);
+      var notification = navigator.mozNotification.createNotification(emisor, msg);
     
       notification.show();
     });

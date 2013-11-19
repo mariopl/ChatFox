@@ -108,9 +108,6 @@
 
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
     $('#lines').get(0).scrollTop = 10000000;
-    localStorage.from = from;
-    localStorage.msg = msg;
-
 
     console.log('---------CHATFOX-------- NOTIFICATION ' + 'EMISOR: ' + from + ' MENSAJE: ' + msg);
     // if (document.hidden) {
