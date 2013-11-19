@@ -196,7 +196,6 @@ function save(nickdata, endpoint, id) {
       doc = {"nick": nickdata, "endpoint": endpoint, "disconnected": false};
       collection.insert(doc, function(){});
       console.log(doc)
-      console.log(io.sockets.sockets[id])
       });
 }
 

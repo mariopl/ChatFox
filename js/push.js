@@ -10,15 +10,19 @@ var Push = (function() {
 
   if (navigator.push) {    
     window.navigator.mozSetMessageHandler('push', function() {
+      
+      var from = localStorage.from;
+      var msg = localStorage.msg;
 
-      console.log('-----------------CHATFOX---------------- NOTIFICATION')
+      console.log('-----------------CHATFOX NOTIFICATION---------------- EMISOR: ' + from + ' MENSAJE: ' + msg)
 
       if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
       } else if (localStorage.notificationsReceived) {
         localStorage.notificationsReceived++;
       }
-      var notification = navigator.mozNotification.createNotification('Notification', 'prueba de conteo');
+      
+      var notification = navigator.mozNotification.createNotification(from, msg);
     
       notification.show();
     });
