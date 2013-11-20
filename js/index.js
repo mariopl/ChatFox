@@ -9,6 +9,7 @@
     }
   }
   });
+
     
   $(function () {
 
@@ -28,33 +29,43 @@
 
   // socket.io code
   //
+  var atweet = localStorage.lastTweet;
 
   var socket = io.connect('http://192.168.1.103:8443');
 
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
-    socket.emit('ping');
+    socket.emit('hello');
   });
 
   socket.on('pong', function () {
 
-    setTimeout('ping()', 300000);
+
+
+    socket.emit('ping', localStorage.lastTweet);
+    setTimeout('hello()', 10000);
+    
   });
 
   socket.on('pongTweet', function (count, tweet) {
     tweets('@'+count, tweet);
-    setTimeout('ping()', 300000);
+    atweet = localStorage.lastTweet = tweet;
+
+
   });
 
   socket.on('origin', function(count, tweet) {
     tweets('@'+count, tweet);
-    setTimeout('ping()', 300000);
+    localStorage.lastTweet = tweet;
+    setTimeout('hello()', 10000);
+    atweet = localStorage.lastTweet = tweet;
   });
 
-  function ping() {
-    socket.emit('ping');
+  function hello() {
+    socket.emit('hello');
   }
+
 
   socket.on('announcement', function (nick, msg) {
     $('#lines').append($('<p>').append($('<b>').text(nick), msg));
@@ -71,6 +82,32 @@
 
     }
   });
+
+  socket.on('actualTweet', function(count, actualTweet) {
+    localStorage.lastTweet = actualTweet;
+
+    if (!localStorage.notificationsReceived) {
+        localStorage.notificationsReceived = 1;
+      } else if (localStorage.notificationsReceived) {
+        localStorage.notificationsReceived++;
+      }
+    if (navigator.push){
+      
+      var notification = navigator.mozNotification.createNotification('@'+count, actualTweet);
+    
+      notification.show();
+    }
+
+    if (localStorage.messagesReceived) {
+      localStorage.messagesReceived++;
+    }
+    
+      // var notification = navigator.mozNotification.createNotification(count, actualTweet);
+      // notification.show();
+      // console.log('notification.show() ejecutado');
+      // localStorage.notificationsReceived++;
+  });
+  
 
   socket.on('user message', message, function() {
   });
@@ -116,6 +153,18 @@
     //   localStorage.notificationsReceived++;
     // }
 
+    if (!localStorage.notificationsReceived) {
+        localStorage.notificationsReceived = 1;
+      } else if (localStorage.notificationsReceived) {
+        localStorage.notificationsReceived++;
+      }
+    if (navigator.push && document.hidden){
+      
+      var notification = navigator.mozNotification.createNotification(emisor, msg);
+    
+      notification.show();
+    }
+
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
@@ -126,6 +175,17 @@
     $('#lines').get(0).scrollTop = 10000000;
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
+    }
+    if (!localStorage.notificationsReceived) {
+        localStorage.notificationsReceived = 1;
+      } else if (localStorage.notificationsReceived) {
+        localStorage.notificationsReceived++;
+      }
+    if (navigator.push && document.hidden){
+      
+      var notification = navigator.mozNotification.createNotification('@'+count, tweet);
+    
+      notification.show();
     }
   }
 

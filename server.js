@@ -20,6 +20,39 @@ var stream = new Stream({
 if (err) throw err;
 console.log("Connected to Database");
 
+stream.stream();
+
+  stream.on('data', function(json) {
+    tweet = json.text;
+      if (tweet != undefined){
+        actualTweet = tweet;
+        updateTweet = tweet;
+        count = (json.user && json.user.screen_name) || 'Message from Twitter';
+        recent_messages.push({nick: '@'+count, msg: actualTweet});
+        console.log(count);
+        var collection = dbs.collection('usuarios')
+       .find({} , {endpoint:1, _id:0}) // .find({ off: true })
+       .toArray(function(err, docs) {
+        var array = docs;
+        console.log(array.length)
+        for (var i = 0; i < docs.length ; i++) {
+          console.log('Despertando  ' + docs[i].endpoint)
+          request.put({
+            url:     docs[i].endpoint,
+            body:    "version=" + new Date().getTime()
+          }, function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                console.log(body)
+              }
+              });
+        }
+    });
+
+      }
+  });
+
+
+
   var app = require('http').createServer(handler);
   app.listen(8443);
 
@@ -33,22 +66,12 @@ console.log("Connected to Database");
     nicknames = {},
     endpoints = [],
     tweet = null,
-    lastTweet = null,
+    count = null,
+    actualTweet = null,
+    updateTweet = null,
     count = null,
     recent_messages = [],
     i = -1;
-
-  stream.stream();
-
-    stream.on('data', function(json) {
-      tweet = json.text;
-        if (tweet != undefined){
-          count = (json.user && json.user.screen_name) || 'Message from Twitter';
-          console.log(count);
-        
-
-        }
-    });
 
 
   io.sockets.on('connection', function (socket) {
@@ -78,29 +101,6 @@ console.log("Connected to Database");
         socket.broadcast.emit('user message', socket.nickname, msg);
       });
 
-      socket.on('ping', function () {
-          console.log('ping');
-          online();
-          
-          if (tweet != lastTweet || undefined || null) {
-          //socket.broadcast.emit('pongTweet', count, tweet);
-          sendTweet(count, tweet);
-          socket.emit('origin', count, tweet);
-          lastTweet = tweet;
-          wakeUp(null, tweet, '@'+count);
-           if (recent_messages.length > 8) {
-        recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
-        }
-        recent_messages.push({nick: '@'+count, msg: tweet});
-
-  
-          
-        } else {
-          sendPong();
-          //socket.broadcast.emit('pong');
-        }
-      });
-
         socket.on('user endpoint', function(endpoint){
         socket.endpoint = endpoint;
         });
@@ -109,6 +109,44 @@ console.log("Connected to Database");
           console.log('ENDPOINT RECIBIDO');
           update(endpoint)
         });
+
+      socket.on('new tweet', function(lastTweet) {
+        if(lastTweet != actualTweet) {
+          console.log('es difetente');
+          socket.emit('actualTweet', count, actualTweet)
+        } else {
+          sendPong();
+        }
+      });
+
+      socket.on('hello', function() {
+        sendPong();
+      });
+
+      socket.on('ping', function (datos) {
+  
+          online();
+          console.log('me llega por ping ' + datos)
+          if(datos != tweet) {
+            //sendTweet(count, tweet);
+            socket.emit('origin', count, tweet);
+          }
+      
+
+          //socket.broadcast.emit('pongTweet', count, tweet);
+        
+      
+          // sendTweet(count, tweet);
+          // socket.emit('origin', count, tweet);
+          // lastTweet = tweet;
+        //    if (recent_messages.length > 8) {
+        // recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
+        // }
+        //recent_messages.push({nick: '@'+count, msg: tweet}); 
+      
+          //socket.broadcast.emit('pong');
+        
+      });
 
       socket.on('nicknamerecovery', function(nick) {
 

@@ -10,6 +10,9 @@ var Push = (function() {
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
     var socket = io.connect('http://192.168.1.103:8443');
+    var lastTweet = localStorage.lastTweet;
+
+socket.emit('new tweet', lastTweet); 
 
 console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
 
@@ -30,17 +33,17 @@ console.log('PUSH.JS    Emisor: ' + emisor + ' Mensaje: ' + msg);
   if (navigator.push) {    
     window.navigator.mozSetMessageHandler('push', function() {
 
-      console.log('-----------------CHATFOX NOTIFICATION---------------- EMISOR: ' + emisor + ' MENSAJE: ' + msg)
+      // console.log('-----------------CHATFOX NOTIFICATION---------------- EMISOR: ' + emisor + ' MENSAJE: ' + msg)
 
-      if (!localStorage.notificationsReceived) {
-        localStorage.notificationsReceived = 1;
-      } else if (localStorage.notificationsReceived) {
-        localStorage.notificationsReceived++;
-      }
+      // if (!localStorage.notificationsReceived) {
+      //   localStorage.notificationsReceived = 1;
+      // } else if (localStorage.notificationsReceived) {
+      //   localStorage.notificationsReceived++;
+      // }
       
-      var notification = navigator.mozNotification.createNotification(emisor, msg);
+      // var notification = navigator.mozNotification.createNotification(emisor, msg);
     
-      notification.show();
+      // notification.show();
     });
 
     window.navigator.mozSetMessageHandler('push-register', function() {
