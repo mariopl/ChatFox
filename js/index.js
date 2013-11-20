@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.103:8443/manifest.webapp');
     }
   }
   });
@@ -29,7 +29,7 @@
   // socket.io code
   //
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.103:8443');
 
 
   socket.on('connect', function () {
@@ -90,7 +90,6 @@
 
   socket.on('error', function (e) {
     //message('ChatFox', e ? e : 'Algo falla, prueba a reiniciar la app');
-      alert('You need an internet connection');
       location.reload(true); 
   });
 

@@ -2,16 +2,18 @@
 Class that will allow us to register for push 
 and register in push server
 */
+console.log('PUSH.JS   dentro de push.js');
+
 var emisor = 'Chatfox';
 var msg = 'Nuevo mensaje de chat';
 var Push = (function() {	
-
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
-    var socket = io.connect('http://localhost:8443');
+    var socket = io.connect('http://192.168.1.103:8443');
+
+console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
 
     socket.on('info', function(Oemisor, Omsg) {
-
       emisorinfo = Oemisor;
       msginfo = Omsg;
       cambia(emisorinfo, msginfo);
@@ -21,7 +23,7 @@ var Push = (function() {
     function cambia(emisorinfo, msginfo) {
       emisor = emisorinfo;
       msg = msginfo;
-
+console.log('PUSH.JS    Emisor: ' + emisor + ' Mensaje: ' + msg);
     }
    
 
@@ -42,17 +44,18 @@ var Push = (function() {
     });
 
     window.navigator.mozSetMessageHandler('push-register', function() {
-
+console.log('PUSH.JS     dentro push-register');
       navigator.push.unregister(endpoint);
 
       var req = navigator.push.register();
 
+console.log('PUSH.JS     solicitando endpoint')
       req.onsuccess = function(e) {
-        var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://localhost:8443');
-        socket.emit('user endpoint', endpoint);
+        endpoint = localStorage.endpoint = req.result;  
+        socket.emit('new endpoint', endpoint);
+console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
       }
-
+   
       req.onerror = function(e) {
        alert("Error getting a new endpoint: " + JSON.stringify(e));
      }
@@ -61,21 +64,23 @@ var Push = (function() {
 
   if(!endpoint){
     if (navigator.push) {
+console.log('PUSH.JS    solicitando registro de endpoint')
     	var req = navigator.push.register();
     	
     	req.onsuccess = function(e) {
        var endpoint = localStorage.endpoint = req.result;
        socket.emit('user endpoint', endpoint); 
-       console.log('---------CHATFOX-------- Endpoint successfully registered: ' + endpoint);
+console.log('---------CHATFOX-------- Endpoint successfully registered: ' + endpoint);
      }
 
      req.onerror = function(e) {
        alert("Error getting a new endpoint: " + JSON.stringify(e));
-       console.log('---------CHATFOX-------- Error getting the endpoint');
+console.log('---------CHATFOX-------- Error getting the endpoint');
      }
    } 
   } else {
-    var endpoint = localStorage.endpoint;
-    socket.emit('user endpoint', endpoint); 
+    endpoint = localStorage.endpoint;
+    socket.emit('user endpoint', endpoint);
+ 
   }
 })();

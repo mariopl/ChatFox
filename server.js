@@ -102,12 +102,12 @@ console.log("Connected to Database");
       });
 
         socket.on('user endpoint', function(endpoint){
-        //endpoints[endpoint] = socket.endpoint = endpoint;
         socket.endpoint = endpoint;
-        endpoints.push(endpoint);
-        this.log.debug(endpoints);
-        this.log.debug(endpoints.length);
+        });
 
+        socket.on('new endpoint', function(endpoint){
+          console.log('ENDPOINT RECIBIDO');
+          update(endpoint)
         });
 
       socket.on('nicknamerecovery', function(nick) {
@@ -190,13 +190,22 @@ function sendPong() {
   online();
 }
 
-function save(nickdata, endpoint, id) {
+function save(nickdata, endpoint) {
 
       dbs.collection('usuarios', function(err,collection){
       doc = {"nick": nickdata, "endpoint": endpoint, "disconnected": false};
       collection.insert(doc, function(){});
       console.log(doc)
       });
+}
+
+function update(endpoint) {
+
+      
+    dbs.collection('usuarios').update({nick: socket.nickname}, {$set: {endpoint: endpoint}}, {w:1}, function(err) {
+      if (err) console.warn(err.message);
+      else console.log('successfully updated');
+    });
 }
 
  function wakeUp(myEndpoint, msg, issuing) {
@@ -206,9 +215,11 @@ function save(nickdata, endpoint, id) {
     .find({ disconnected: false } , {endpoint:1, _id:0}) // .find({ off: true })
     .toArray(function(err, docs) {
       var array = docs;
+      console.log(array.length)
       for (var i = 0; i < docs.length ; i++) {
         if(docs[i].endpoint == socket.endpoint){
         } else {
+          console.log('Despertando  ' + docs[i].endpoint)
           request.put({
             url:     docs[i].endpoint,
             body:    "version=" + new Date().getTime()
