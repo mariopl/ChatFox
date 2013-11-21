@@ -9,7 +9,7 @@ var msg = 'Nuevo mensaje de chat';
 var Push = (function() {	
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
-    var socket = io.connect('http://192.168.1.103:8443');
+    var socket = io.connect('http://192.168.1.57:8443');
     var lastTweet = localStorage.lastTweet;
 
 socket.emit('new tweet', lastTweet); 

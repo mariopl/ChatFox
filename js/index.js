@@ -5,33 +5,20 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.103:8443/manifest.webapp');
+        .install('http://192.168.1.57:8443/manifest.webapp');
     }
   }
   });
 
-    
-  $(function () {
-
-   if (!localStorage.messagesReceived) {
-
-    localStorage.messagesReceived = 0;
-
-   }
-
-   if (!localStorage.notificationsReceived) {
-
-    localStorage.notificationsReceived = 0;
-
-   }
-
-  });
+  var ultimoEmisorRecibido = localStorage.ultimoEmisor;
+  var ultimoMensajeRecibido = localStorage.ultimoMensaje;
+  var atweet = localStorage.lastTweet;
 
   // socket.io code
   //
-  var atweet = localStorage.lastTweet;
+  
 
-  var socket = io.connect('http://192.168.1.103:8443');
+  var socket = io.connect('http://192.168.1.57:8443');
 
 
   socket.on('connect', function () {
@@ -39,7 +26,27 @@
     socket.emit('hello');
   });
 
-  socket.on('pong', function () {
+  socket.on('pong', function (var1, var2) {
+    if(var1 = ultimoEmisorRecibido) {
+
+    } else {
+      if (navigator.push){
+      
+      var notification = navigator.mozNotification.createNotification(var1, var2);
+    
+      notification.show();
+      }
+
+      if (localStorage.messagesReceived) {
+        localStorage.messagesReceived++;
+      }
+      if (!localStorage.notificationsReceived) {
+        localStorage.notificationsReceived = 1;
+      } else if (localStorage.notificationsReceived) {
+        localStorage.notificationsReceived++;
+      }
+
+    }
 
 
 
@@ -48,18 +55,13 @@
     
   });
 
-  socket.on('pongTweet', function (count, tweet) {
-    tweets('@'+count, tweet);
-    atweet = localStorage.lastTweet = tweet;
-
-
-  });
-
   socket.on('origin', function(count, tweet) {
     tweets('@'+count, tweet);
-    localStorage.lastTweet = tweet;
     setTimeout('hello()', 10000);
     atweet = localStorage.lastTweet = tweet;
+    ultimoEmisorRecibido = localStorage.ultimoEmisor = '@'+count;
+    ultimoMensajeRecibido = localStorage.ultimoMensaje = tweet;
+
   });
 
   function hello() {
@@ -82,34 +84,12 @@
 
     }
   });
-
-  socket.on('actualTweet', function(count, actualTweet) {
-    localStorage.lastTweet = actualTweet;
-
-    if (!localStorage.notificationsReceived) {
-        localStorage.notificationsReceived = 1;
-      } else if (localStorage.notificationsReceived) {
-        localStorage.notificationsReceived++;
-      }
-    if (navigator.push){
-      
-      var notification = navigator.mozNotification.createNotification('@'+count, actualTweet);
-    
-      notification.show();
-    }
-
-    if (localStorage.messagesReceived) {
-      localStorage.messagesReceived++;
-    }
-    
-      // var notification = navigator.mozNotification.createNotification(count, actualTweet);
-      // notification.show();
-      // console.log('notification.show() ejecutado');
-      // localStorage.notificationsReceived++;
-  });
   
 
-  socket.on('user message', message, function() {
+  socket.on('user message', function(nickname, msg) {
+    ultimoEmisorRecibido = localStorage.ultimoEmisor = nickname;
+    ultimoMensajeRecibido = localStorage.ultimoMensaje = msg;
+    message(nickname,msg);
   });
 
   socket.on('reconnect', function () {
@@ -153,12 +133,13 @@
     //   localStorage.notificationsReceived++;
     // }
 
-    if (!localStorage.notificationsReceived) {
+    
+    if (navigator.push && document.hidden){
+      if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
       } else if (localStorage.notificationsReceived) {
         localStorage.notificationsReceived++;
       }
-    if (navigator.push && document.hidden){
       
       var notification = navigator.mozNotification.createNotification(emisor, msg);
     
@@ -176,12 +157,13 @@
     if (localStorage.messagesReceived) {
       localStorage.messagesReceived++;
     }
-    if (!localStorage.notificationsReceived) {
+    
+    if (navigator.push && document.hidden){
+      if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
       } else if (localStorage.notificationsReceived) {
         localStorage.notificationsReceived++;
       }
-    if (navigator.push && document.hidden){
       
       var notification = navigator.mozNotification.createNotification('@'+count, tweet);
     

@@ -25,9 +25,9 @@ stream.stream();
   stream.on('data', function(json) {
     tweet = json.text;
       if (tweet != undefined){
-        actualTweet = tweet;
+        ultimoMensaje = actualTweet = tweet;
         updateTweet = tweet;
-        count = (json.user && json.user.screen_name) || 'Message from Twitter';
+        ultimoEmisor = count = (json.user && json.user.screen_name) || 'Message from Twitter';
         recent_messages.push({nick: '@'+count, msg: actualTweet});
         console.log(count);
         var collection = dbs.collection('usuarios')
@@ -47,6 +47,8 @@ stream.stream();
               });
         }
     });
+      console.log('ultimo emisor: ' + ultimoEmisor)
+      console.log('ultimo mensaje: ' + ultimoMensaje)
 
       }
   });
@@ -69,8 +71,10 @@ stream.stream();
     count = null,
     actualTweet = null,
     updateTweet = null,
-    count = null,
     recent_messages = [],
+    ultimoMensaje = null,
+    ultimoEmisor = null,
+
     i = -1;
 
 
@@ -87,18 +91,19 @@ stream.stream();
 
       socket.on('user message', function (msg) {
         wakeUp(socket.endpoint, msg, socket.nickname);
+        ultimoEmisor = socket.nickname;
+        ultimoMensaje = msg;
         //console.log(io.sockets.clients().length)
         online();
         //console.log(socket.nickname)
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
-      }
-      recent_messages.push({nick: socket.nickname, msg: msg});
-      
-
-      this.log.debug('MESSAGE SENT FROM ' + socket.nickname);
+        }
+        recent_messages.push({nick: socket.nickname, msg: msg});
         socket.broadcast.emit('user message', socket.nickname, msg);
+        console.log('ultimo emisor: ' + ultimoEmisor)
+        console.log('ultimo mensaje: ' + ultimoMensaje)
       });
 
         socket.on('user endpoint', function(endpoint){
@@ -110,15 +115,6 @@ stream.stream();
           update(endpoint)
         });
 
-      socket.on('new tweet', function(lastTweet) {
-        if(lastTweet != actualTweet) {
-          console.log('es difetente');
-          socket.emit('actualTweet', count, actualTweet)
-        } else {
-          sendPong();
-        }
-      });
-
       socket.on('hello', function() {
         sendPong();
       });
@@ -127,24 +123,14 @@ stream.stream();
   
           online();
           console.log('me llega por ping ' + datos)
-          if(datos != tweet) {
+          if(tweet) {
+            if(tweet != datos){
             //sendTweet(count, tweet);
             socket.emit('origin', count, tweet);
+            console.log('actualizando atweet a ' + tweet)
+            }
           }
-      
-
-          //socket.broadcast.emit('pongTweet', count, tweet);
-        
-      
-          // sendTweet(count, tweet);
-          // socket.emit('origin', count, tweet);
-          // lastTweet = tweet;
-        //    if (recent_messages.length > 8) {
-        // recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
-        // }
-        //recent_messages.push({nick: '@'+count, msg: tweet}); 
-      
-          //socket.broadcast.emit('pong');
+       
         
       });
 
@@ -223,7 +209,7 @@ function sendTweet(count, tweet) {
 }
 
 function sendPong() {
-  socket.emit('pong');
+  socket.emit('pong', ultimoEmisor, ultimoMensaje);
   //socket.broadcast.emit('nicknames', nicknames);
   online();
 }
