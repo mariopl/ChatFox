@@ -11,6 +11,8 @@ var Push = (function() {
     var endpoint = localStorage.endpoint || null;
     var socket = io.connect('http://192.168.1.57:8443');
 
+    socket.emit('hello');
+
 console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
    
   if (navigator.push) {    
@@ -24,7 +26,7 @@ console.log('PUSH.JS    tu endpoint es: ' + endpoint);
       //   localStorage.notificationsReceived++;
       // }
       
-      // var notification = navigator.mozNotification.createNotification(emisor, msg);
+      // var notification = navigator.mozNotification.createNotification(localStorage.ultimoEmisorRecibido, localStorage.ultimoMensajeRecibodo);
     
       // notification.show();
     });

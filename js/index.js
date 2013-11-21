@@ -10,6 +10,13 @@
   }
   });
 
+  $(function() {
+    if(navigator.push){
+    var notification = navigator.mozNotification.createNotification('ChatFox', 'Nuevo mensaje de chat'); 
+    notification.show();
+  }
+  });
+
  
 
   // socket.io code
@@ -46,16 +53,14 @@
         } else if (localStorage.messagesReceived) {
         localStorage.messagesReceived++;
         }    
-        if (navigator.push && document.hidden){
+        if (navigator.push){
+          pushTweet(aultimoEmisor, aultimoMensaje);
           if (!localStorage.notificationsReceived) {
           localStorage.notificationsReceived = 1;
           } else if (localStorage.notificationsReceived) {
           localStorage.notificationsReceived++;
           }
-      
-          var notification = navigator.mozNotification.createNotification(ultimoEmisorRecibido, ultimoMensajeRecibido);
-    
-      notification.show();
+          
     }
   }
 
@@ -144,14 +149,13 @@
     //   console.log('notification.show() ejecutado');
     //   localStorage.notificationsReceived++;
     // }
-
-    
+   
     if (!localStorage.messagesReceived) {
         localStorage.messagesReceived = 1;
       } else if (localStorage.messagesReceived) {
         localStorage.messagesReceived++;
       }    
-    if (navigator.push && document.hidden){
+    if (navigator.push){
       if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
       } else if (localStorage.notificationsReceived) {
@@ -162,6 +166,16 @@
     
       notification.show();
     }
+
+  
+  }
+
+  function pushTweet(var1, var2) {
+
+    var notification = navigator.mozNotification.createNotification(var1, var2);
+    
+      notification.show();
+
   }
 
   // function tweets (count, tweet) {
@@ -185,27 +199,7 @@
   //   }
   // }
 
-  function notify(var1, var2) {
-    $('#lines').append($('<p>').append($('<b>').text(var1), var2));
-    $('#lines').get(0).scrollTop = 10000000;
-    if (!localStorage.messagesReceived) {
-        localStorage.messagesReceived = 1;
-      } else if (localStorage.messagesReceived) {
-        localStorage.messagesReceived++;
-      }    
-    if (navigator.push && document.hidden){
-      if (!localStorage.notificationsReceived) {
-        localStorage.notificationsReceived = 1;
-      } else if (localStorage.notificationsReceived) {
-        localStorage.notificationsReceived++;
-      }
-      
-      var notification = navigator.mozNotification.createNotification(var1, var2);
-    
-      notification.show();
-    }
 
-  } 
 
   //
   // dom manipulation code
@@ -266,7 +260,7 @@
             message('me', $('#message').val());
             ultimoMensajeRecibido = localStorage.ultimoMensaje = $('#message').val();
             socket.emit('user message', $('#message').val());
-            localStorage.messagesReceived--
+            //localStorage.messagesReceived--
             clear();
             $('#lines').get(0).scrollTop = 10000000;
             $('#message').blur();
