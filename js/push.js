@@ -9,7 +9,7 @@ var msg = 'Nuevo mensaje de chat';
 var Push = (function() {	
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
-    var socket = io.connect('http://192.168.1.57:8443');
+    var socket = io.connect('http://localhost:8443');
 
     socket.emit('hello');
 
@@ -37,11 +37,11 @@ console.log('PUSH.JS     dentro push-register');
 
       var req = navigator.push.register();
 
-console.log('PUSH.JS     solicitando endpoint')
+console.log('PUSH.JS     solicitando nuevo registro de endpoint')
       req.onsuccess = function(e) {
         endpoint = localStorage.endpoint = req.result;  
         socket.emit('new endpoint', endpoint);
-console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
+console.log('PUSH.JS    tu nuevo endpoint es: ' + endpoint); 
       }
    
       req.onerror = function(e) {

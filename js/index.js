@@ -5,7 +5,7 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.57:8443/manifest.webapp');
+        .install('http://localhost:8443/manifest.webapp');
     }
   }
   });
@@ -23,7 +23,7 @@
   //
   
 
-  var socket = io.connect('http://192.168.1.57:8443');
+  var socket = io.connect('http://localhost:8443');
 
   var ultimoEmisorRecibido = localStorage.ultimoEmisor;
   var ultimoMensajeRecibido = localStorage.ultimoMensaje;
@@ -36,7 +36,7 @@
   });
 
   socket.on('pong', function (aultimoEmisor, aultimoMensaje) {
-    setTimeout('hello()', 10000);
+    setTimeout('hello()', 180000);
 
          if(aultimoMensaje != ultimoMensajeRecibido) {
         ultimoEmisorRecibido = localStorage.ultimoEmisor = aultimoEmisor;
