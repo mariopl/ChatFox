@@ -27,9 +27,11 @@ stream.stream();
       if (tweet != undefined){
         ultimoMensaje = actualTweet = tweet;
         updateTweet = tweet;
-        ultimoEmisor = count = (json.user && json.user.screen_name) || 'Message from Twitter';
+        count = (json.user && json.user.screen_name) || 'Message from Twitter';
+        ultimoEmisor = '@'+count;
         recent_messages.push({nick: '@'+count, msg: actualTweet});
         console.log(count);
+        console.log(ultimoMensaje);
         var collection = dbs.collection('usuarios')
        .find({} , {endpoint:1, _id:0}) // .find({ off: true })
        .toArray(function(err, docs) {
@@ -116,23 +118,25 @@ stream.stream();
         });
 
       socket.on('hello', function() {
-        sendPong();
+        console.log('enviando pong' + ultimoMensaje)
+        socket.emit('pong', ultimoEmisor, ultimoMensaje);
+        online();
       });
 
-      socket.on('ping', function (datos) {
+      // socket.on('ping', function (datos) {
   
-          online();
-          console.log('me llega por ping ' + datos)
-          if(tweet) {
-            if(tweet != datos){
-            //sendTweet(count, tweet);
-            socket.emit('origin', count, tweet);
-            console.log('actualizando atweet a ' + tweet)
-            }
-          }
+      //     online();
+      //     console.log('me llega por ping ' + datos)
+      //     if(tweet) {
+      //       if(tweet != datos){
+      //       //sendTweet(count, tweet);
+      //       socket.emit('origin', count, tweet);
+      //       console.log('actualizando atweet a ' + tweet)
+      //       }
+      //     }
        
         
-      });
+      // });
 
       socket.on('nicknamerecovery', function(nick) {
 
@@ -208,11 +212,6 @@ function sendTweet(count, tweet) {
   online();
 }
 
-function sendPong() {
-  socket.emit('pong', ultimoEmisor, ultimoMensaje);
-  //socket.broadcast.emit('nicknames', nicknames);
-  online();
-}
 
 function save(nickdata, endpoint) {
 

@@ -10,26 +10,9 @@ var Push = (function() {
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
     var socket = io.connect('http://192.168.1.57:8443');
-    var lastTweet = localStorage.lastTweet;
-
-socket.emit('new tweet', lastTweet); 
 
 console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
-
-    socket.on('info', function(Oemisor, Omsg) {
-      emisorinfo = Oemisor;
-      msginfo = Omsg;
-      cambia(emisorinfo, msginfo);
-
-    });
-
-    function cambia(emisorinfo, msginfo) {
-      emisor = emisorinfo;
-      msg = msginfo;
-console.log('PUSH.JS    Emisor: ' + emisor + ' Mensaje: ' + msg);
-    }
    
-
   if (navigator.push) {    
     window.navigator.mozSetMessageHandler('push', function() {
 

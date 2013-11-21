@@ -10,9 +10,7 @@
   }
   });
 
-  var ultimoEmisorRecibido = localStorage.ultimoEmisor;
-  var ultimoMensajeRecibido = localStorage.ultimoMensaje;
-  var atweet = localStorage.lastTweet;
+ 
 
   // socket.io code
   //
@@ -20,49 +18,62 @@
 
   var socket = io.connect('http://192.168.1.57:8443');
 
+  var ultimoEmisorRecibido = localStorage.ultimoEmisor;
+  var ultimoMensajeRecibido = localStorage.ultimoMensaje;
+  var atweet = localStorage.lastTweet;
+  var lastMsg = null;
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
     socket.emit('hello');
   });
 
-  socket.on('pong', function (var1, var2) {
-    if(var1 = ultimoEmisorRecibido) {
+  socket.on('pong', function (aultimoEmisor, aultimoMensaje) {
+    setTimeout('hello()', 10000);
 
-    } else {
-      if (navigator.push){
+         if(aultimoMensaje != ultimoMensajeRecibido) {
+        ultimoEmisorRecibido = localStorage.ultimoEmisor = aultimoEmisor;
+        ultimoMensajeRecibido = localStorage.ultimoMensaje = aultimoMensaje;
+
+        if(ultimoEmisorRecibido != null && ultimoMensajeRecibido != lastMsg){
+        $('#lines').append($('<p>').append($('<b>').text(ultimoEmisorRecibido), ultimoMensajeRecibido));
+        $('#lines').get(0).scrollTop = 10000000;
+
+        
+        
+        if (!localStorage.messagesReceived) {
+          localStorage.messagesReceived = 1;
+        } else if (localStorage.messagesReceived) {
+        localStorage.messagesReceived++;
+        }    
+        if (navigator.push && document.hidden){
+          if (!localStorage.notificationsReceived) {
+          localStorage.notificationsReceived = 1;
+          } else if (localStorage.notificationsReceived) {
+          localStorage.notificationsReceived++;
+          }
       
-      var notification = navigator.mozNotification.createNotification(var1, var2);
+          var notification = navigator.mozNotification.createNotification(ultimoEmisorRecibido, ultimoMensajeRecibido);
     
       notification.show();
-      }
-
-      if (localStorage.messagesReceived) {
-        localStorage.messagesReceived++;
-      }
-      if (!localStorage.notificationsReceived) {
-        localStorage.notificationsReceived = 1;
-      } else if (localStorage.notificationsReceived) {
-        localStorage.notificationsReceived++;
-      }
+    }
+  }
 
     }
+    
 
-
-
-    socket.emit('ping', localStorage.lastTweet);
-    setTimeout('hello()', 10000);
+    //socket.emit('ping', localStorage.lastTweet);
     
   });
 
-  socket.on('origin', function(count, tweet) {
-    tweets('@'+count, tweet);
-    setTimeout('hello()', 10000);
-    atweet = localStorage.lastTweet = tweet;
-    ultimoEmisorRecibido = localStorage.ultimoEmisor = '@'+count;
-    ultimoMensajeRecibido = localStorage.ultimoMensaje = tweet;
+  // socket.on('origin', function(count, tweet) {
+  //   tweets('@'+count, tweet);
+  //   setTimeout('hello()', 10000);
+  //   atweet = localStorage.lastTweet = tweet;
+  //   ultimoEmisorRecibido = localStorage.ultimoEmisor = '@'+count;
+  //   ultimoMensajeRecibido = localStorage.ultimoMensaje = tweet;
 
-  });
+  // });
 
   function hello() {
     socket.emit('hello');
@@ -71,6 +82,7 @@
 
   socket.on('announcement', function (nick, msg) {
     $('#lines').append($('<p>').append($('<b>').text(nick), msg));
+    lastMsg = msg;
   }); 
 
   socket.on('nicknames', function (online) {
@@ -134,6 +146,11 @@
     // }
 
     
+    if (!localStorage.messagesReceived) {
+        localStorage.messagesReceived = 1;
+      } else if (localStorage.messagesReceived) {
+        localStorage.messagesReceived++;
+      }    
     if (navigator.push && document.hidden){
       if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
@@ -141,23 +158,41 @@
         localStorage.notificationsReceived++;
       }
       
-      var notification = navigator.mozNotification.createNotification(emisor, msg);
+      var notification = navigator.mozNotification.createNotification(from, msg);
     
       notification.show();
     }
-
-    if (localStorage.messagesReceived) {
-      localStorage.messagesReceived++;
-    }
   }
 
-  function tweets (count, tweet) {
-    $('#lines').append($('<p>').append($('<b>').text(count), tweet));
+  // function tweets (count, tweet) {
+  //   $('#lines').append($('<p>').append($('<b>').text(count), tweet));
+  //   $('#lines').get(0).scrollTop = 10000000;
+  //   if (!localStorage.messagesReceived) {
+  //       localStorage.messagesReceived = 1;
+  //     } else if (localStorage.messagesReceived) {
+  //       localStorage.messagesReceived++;
+  //     }    
+  //   if (navigator.push && document.hidden){
+  //     if (!localStorage.notificationsReceived) {
+  //       localStorage.notificationsReceived = 1;
+  //     } else if (localStorage.notificationsReceived) {
+  //       localStorage.notificationsReceived++;
+  //     }
+      
+  //     var notification = navigator.mozNotification.createNotification('@'+count, tweet);
+    
+  //     notification.show();
+  //   }
+  // }
+
+  function notify(var1, var2) {
+    $('#lines').append($('<p>').append($('<b>').text(var1), var2));
     $('#lines').get(0).scrollTop = 10000000;
-    if (localStorage.messagesReceived) {
-      localStorage.messagesReceived++;
-    }
-    
+    if (!localStorage.messagesReceived) {
+        localStorage.messagesReceived = 1;
+      } else if (localStorage.messagesReceived) {
+        localStorage.messagesReceived++;
+      }    
     if (navigator.push && document.hidden){
       if (!localStorage.notificationsReceived) {
         localStorage.notificationsReceived = 1;
@@ -165,11 +200,12 @@
         localStorage.notificationsReceived++;
       }
       
-      var notification = navigator.mozNotification.createNotification('@'+count, tweet);
+      var notification = navigator.mozNotification.createNotification(var1, var2);
     
       notification.show();
     }
-  }
+
+  } 
 
   //
   // dom manipulation code
@@ -228,6 +264,7 @@
             }
             if(!($('#message').val() == "endpoint")) {
             message('me', $('#message').val());
+            ultimoMensajeRecibido = localStorage.ultimoMensaje = $('#message').val();
             socket.emit('user message', $('#message').val());
             localStorage.messagesReceived--
             clear();
