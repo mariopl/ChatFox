@@ -49,8 +49,8 @@ stream.stream();
               });
         }
     });
-      console.log('ultimo emisor: ' + ultimoEmisor)
-      console.log('ultimo mensaje: ' + ultimoMensaje)
+      // console.log('ultimo emisor: ' + ultimoEmisor)
+      // console.log('ultimo mensaje: ' + ultimoMensaje)
 
       }
   });
@@ -92,12 +92,15 @@ stream.stream();
     }
 
       socket.on('user message', function (msg) {
+      updateTime(socket.nickname);
+      remove();
         wakeUp(socket.endpoint, msg, socket.nickname);
         ultimoEmisor = socket.nickname;
         ultimoMensaje = msg;
-        //console.log(io.sockets.clients().length)
+        console.log(socket.nickname);
+
         online();
-        //console.log(socket.nickname)
+    
 
         if (recent_messages.length > 8) {
         recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
@@ -122,21 +125,6 @@ stream.stream();
         socket.emit('pong', ultimoEmisor, ultimoMensaje);
         online();
       });
-
-      // socket.on('ping', function (datos) {
-  
-      //     online();
-      //     console.log('me llega por ping ' + datos)
-      //     if(tweet) {
-      //       if(tweet != datos){
-      //       //sendTweet(count, tweet);
-      //       socket.emit('origin', count, tweet);
-      //       console.log('actualizando atweet a ' + tweet)
-      //       }
-      //     }
-       
-        
-      // });
 
       socket.on('nicknamerecovery', function(nick) {
 
@@ -216,7 +204,7 @@ function sendTweet(count, tweet) {
 function save(nickdata, endpoint) {
 
       dbs.collection('usuarios', function(err,collection){
-      doc = {"nick": nickdata, "endpoint": endpoint, "disconnected": false};
+      doc = {"nick": nickdata, "endpoint": endpoint, time: new Date().getTime()};
       collection.insert(doc, function(){});
       console.log(doc)
       });
@@ -231,11 +219,17 @@ function update(endpoint) {
     });
 }
 
+function updateTime(user) {
+  dbs.collection('usuarios').update({nick: user}, {$set: {time: new Date().getTime()}}, {w:1}, function(err) {
+      if (err) console.warn(err.message);
+      else console.log('successfully updated');
+    });
+}
+
  function wakeUp(myEndpoint, msg, issuing) {
 
-  socket.broadcast.emit('info', issuing, msg);
   var collection = dbs.collection('usuarios')
-    .find({ disconnected: false } , {endpoint:1, _id:0}) // .find({ off: true })
+    .find({} , {endpoint:1, _id:0}) // .find({ off: true })
     .toArray(function(err, docs) {
       var array = docs;
       console.log(array.length)
@@ -256,6 +250,28 @@ function update(endpoint) {
     });
 
   }
+
+function remove(){
+
+  var collection = dbs.collection('usuarios')
+    .find({} , {time:1, _id:0}) // .find({ off: true })
+    .toArray(function(err, docs) {
+      var array = docs;
+      console.log(array.length)
+      for (var i = 0; i < docs.length ; i++) {
+        if(new Date().getTime() - docs[i].time < 43200000) {
+          console.log('está activo');
+        }else {
+          dbs.collection('usuarios', function(err,collection){
+          doc = {"time": docs[i].time};
+          collection.remove(doc, function(){});
+          });
+        }
+        
+      }
+    });
+  }
+
 
  function exit(nickvalue) {
   

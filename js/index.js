@@ -5,30 +5,24 @@
 
     } else {
       navigator.mozApps
-        .install('http://localhost:8443/manifest.webapp');
+        .install('http://192.168.1.57:8443/manifest.webapp');
     }
   }
   });
 
-  $(function() {
-    if(navigator.push){
-    var notification = navigator.mozNotification.createNotification('ChatFox', 'Nuevo mensaje de chat'); 
-    notification.show();
-  }
-  });
-
- 
-
   // socket.io code
   //
-  
+    
 
-  var socket = io.connect('http://localhost:8443');
+  var socket = io.connect('http://192.168.1.57:8443');
 
+  login();
   var ultimoEmisorRecibido = localStorage.ultimoEmisor;
   var ultimoMensajeRecibido = localStorage.ultimoMensaje;
   var atweet = localStorage.lastTweet;
   var lastMsg = null;
+  var activity = localStorage.activity = new Date().getTime();
+
 
   socket.on('connect', function () {
     $('#chat').addClass('connected');
@@ -36,7 +30,15 @@
   });
 
   socket.on('pong', function (aultimoEmisor, aultimoMensaje) {
-    setTimeout('hello()', 180000);
+    setTimeout('hello()', 10000);
+
+    if(new Date().getTime() - activity > 43200000 && activity != 'new') {
+      localStorage.nick = '';
+      $('#set-nickname').css('visibility', 'visible');
+      alert('Your session has been closed')
+      activity = 'new';
+      
+    }
 
          if(aultimoMensaje != ultimoMensajeRecibido) {
         ultimoEmisorRecibido = localStorage.ultimoEmisor = aultimoEmisor;
@@ -66,19 +68,7 @@
 
     }
     
-
-    //socket.emit('ping', localStorage.lastTweet);
-    
   });
-
-  // socket.on('origin', function(count, tweet) {
-  //   tweets('@'+count, tweet);
-  //   setTimeout('hello()', 10000);
-  //   atweet = localStorage.lastTweet = tweet;
-  //   ultimoEmisorRecibido = localStorage.ultimoEmisor = '@'+count;
-  //   ultimoMensajeRecibido = localStorage.ultimoMensaje = tweet;
-
-  // });
 
   function hello() {
     socket.emit('hello');
@@ -87,6 +77,7 @@
 
   socket.on('announcement', function (nick, msg) {
     $('#lines').append($('<p>').append($('<b>').text(nick), msg));
+    $('#lines').get(0).scrollTop = 10000000;
     lastMsg = msg;
   }); 
 
@@ -204,7 +195,7 @@
   //
   // dom manipulation code
   //
-  $(function () {
+  function login() {
     
     var nick = localStorage.nick || null;
     $('#set-nickname').css('visibility', 'hidden');
@@ -222,6 +213,7 @@
         }
         socket.emit('nickname', $('#nick').val(), function (set) {
           var nick = localStorage.nick = $('#nick').val();
+          activity = localStorage.activity = new Date().getTime();
           $('#set-nickname').css('visibility', 'hidden');
   
           if (!set) {
@@ -247,7 +239,7 @@
       
         return false;
       
-    }}); 
+    }}; 
       
 
       $('#send-message').submit(function () {
@@ -260,6 +252,7 @@
             message('me', $('#message').val());
             ultimoMensajeRecibido = localStorage.ultimoMensaje = $('#message').val();
             socket.emit('user message', $('#message').val());
+            activity = new Date().getTime();
             //localStorage.messagesReceived--
             clear();
             $('#lines').get(0).scrollTop = 10000000;
@@ -307,6 +300,14 @@
     alert('Messages received: ' +  localStorage.messagesReceived + '\n\nNotifications received: ' + localStorage.notificationsReceived);
 
   });
+
+  function logout() {
+    var nickvalue = localStorage.nick;
+    socket.emit('logout', nickvalue);
+    localStorage.nick = '';
+    clear();
+    reinicio();
+  }
 
 
   function reinicio() {
