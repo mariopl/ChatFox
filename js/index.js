@@ -5,23 +5,21 @@
 
     } else {
       navigator.mozApps
-        .install('http://192.168.1.57:8443/manifest.webapp');
+        .install('http://192.168.1.103:8443/manifest.webapp');
     }
   }
   });
 
-  // socket.io code
-  //
-    
 
-  var socket = io.connect('http://192.168.1.57:8443');
+  var socket = io.connect('http://192.168.1.103:8443');
 
   login();
   var ultimoEmisorRecibido = localStorage.ultimoEmisor;
   var ultimoMensajeRecibido = localStorage.ultimoMensaje;
-  var atweet = localStorage.lastTweet;
   var lastMsg = null;
   var activity = localStorage.activity = new Date().getTime();
+  var atweet = localStorage.atweet;
+
 
 
   socket.on('connect', function () {
@@ -29,45 +27,45 @@
     socket.emit('hello');
   });
 
-  socket.on('pong', function (aultimoEmisor, aultimoMensaje) {
+  socket.on('pong', function (tweets) {
     setTimeout('hello()', 10000);
 
     if(new Date().getTime() - activity > 43200000 && activity != 'new') {
       localStorage.nick = '';
       $('#set-nickname').css('visibility', 'visible');
       alert('Your session has been closed')
-      activity = 'new';
-      
+      activity = 'new'; 
     }
+    var previous = localStorage.atweet;
+    var todata = tweets[tweets.length - 1].msg.toString();
+    var data = todata; 
 
-         if(aultimoMensaje != ultimoMensajeRecibido) {
-        ultimoEmisorRecibido = localStorage.ultimoEmisor = aultimoEmisor;
-        ultimoMensajeRecibido = localStorage.ultimoMensaje = aultimoMensaje;
+    for (var i = tweets.length - 1; i >= 0; i--) {
 
-        if(ultimoEmisorRecibido != null && ultimoMensajeRecibido != lastMsg){
-        $('#lines').append($('<p>').append($('<b>').text(ultimoEmisorRecibido), ultimoMensajeRecibido));
-        $('#lines').get(0).scrollTop = 10000000;
 
+        if(previous != tweets[i].msg){
+        console.log('dentro de if')
+        var var1 = tweets[i].nick;
+        var var2 = tweets[i].msg;
+        $('#lines').append($('<p>').append($('<b>').text(var1), var2));
         
-        
-        if (!localStorage.messagesReceived) {
-          localStorage.messagesReceived = 1;
-        } else if (localStorage.messagesReceived) {
-        localStorage.messagesReceived++;
-        }    
-        if (navigator.push){
-          pushTweet(aultimoEmisor, aultimoMensaje);
-          if (!localStorage.notificationsReceived) {
-          localStorage.notificationsReceived = 1;
-          } else if (localStorage.notificationsReceived) {
-          localStorage.notificationsReceived++;
-          }
-          
-    }
-  }
+        }
+
+        else {
+          console.log('else')
+          break;
+
+
+        }
+  
 
     }
-    
+  
+
+     var atweet = localStorage.atweet = data;
+     $('#lines').get(0).scrollTop = 10000000;
+     console.log('atweet es ' + atweet);
+     console.log('previous es ' + previous);
   });
 
   function hello() {
@@ -101,20 +99,16 @@
   });
 
   socket.on('reconnect', function () {
-    //$('#lines').remove();
-    //message('ChatFox', 'Reconectado al servidor');
       location.reload(true);
     
   });
 
   socket.on('reconnecting', function () {
-    //message('ChatFox', 'Intentando conectarse al servidor');
       location.reload(true);
     $('#send-message').css('visibility', 'hidden');
   });
 
   socket.on('error', function (e) {
-    //message('ChatFox', e ? e : 'Algo falla, prueba a reiniciar la app');
       location.reload(true); 
   });
 
@@ -123,23 +117,9 @@
   })
 
   function message (from, msg) {
-    // var d = new Date();
-    // var curr_date = d.getDate();
-    // var curr_month = d.getMonth() + 1;
-    // var curr_year = d.getFullYear();
-    // var curr_hour = d.getHours();
-    // var curr_minute = d.getMinutes();
 
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
     $('#lines').get(0).scrollTop = 10000000;
-
-    console.log('---------CHATFOX-------- NOTIFICATION ' + 'EMISOR: ' + from + ' MENSAJE: ' + msg);
-    // if (document.hidden) {
-    //   var notification = navigator.mozNotification.createNotification(from, msg);
-    //   notification.show();
-    //   console.log('notification.show() ejecutado');
-    //   localStorage.notificationsReceived++;
-    // }
    
     if (!localStorage.messagesReceived) {
         localStorage.messagesReceived = 1;
@@ -168,28 +148,6 @@
       notification.show();
 
   }
-
-  // function tweets (count, tweet) {
-  //   $('#lines').append($('<p>').append($('<b>').text(count), tweet));
-  //   $('#lines').get(0).scrollTop = 10000000;
-  //   if (!localStorage.messagesReceived) {
-  //       localStorage.messagesReceived = 1;
-  //     } else if (localStorage.messagesReceived) {
-  //       localStorage.messagesReceived++;
-  //     }    
-  //   if (navigator.push && document.hidden){
-  //     if (!localStorage.notificationsReceived) {
-  //       localStorage.notificationsReceived = 1;
-  //     } else if (localStorage.notificationsReceived) {
-  //       localStorage.notificationsReceived++;
-  //     }
-      
-  //     var notification = navigator.mozNotification.createNotification('@'+count, tweet);
-    
-  //     notification.show();
-  //   }
-  // }
-
 
 
   //

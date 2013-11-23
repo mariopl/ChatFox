@@ -25,15 +25,15 @@ stream.stream();
   stream.on('data', function(json) {
     tweet = json.text;
       if (tweet != undefined){
-        ultimoMensaje = actualTweet = tweet;
-        updateTweet = tweet;
         count = (json.user && json.user.screen_name) || 'Message from Twitter';
         ultimoEmisor = '@'+count;
-        recent_messages.push({nick: '@'+count, msg: actualTweet});
-        console.log(count);
-        console.log(ultimoMensaje);
+        recent_messages.push({nick: '@'+count, msg: tweet});
+        if (tweets.length > 8) {
+        tweets = tweets.slice(tweets.length-8, tweets.length);
+        }
+        tweets.push({nick: '@'+count, msg: tweet});
         var collection = dbs.collection('usuarios')
-       .find({} , {endpoint:1, _id:0}) // .find({ off: true })
+       .find({} , {endpoint:1, _id:0})
        .toArray(function(err, docs) {
         var array = docs;
         console.log(array.length)
@@ -49,11 +49,32 @@ stream.stream();
               });
         }
     });
-      // console.log('ultimo emisor: ' + ultimoEmisor)
-      // console.log('ultimo mensaje: ' + ultimoMensaje)
+
 
       }
+      console.log(tweets);
   });
+
+  function remove(){
+
+  var collection = dbs.collection('usuarios')
+    .find({} , {time:1, _id:0}) // .find({ off: true })
+    .toArray(function(err, docs) {
+      var array = docs;
+      console.log(array.length)
+      for (var i = 0; i < docs.length ; i++) {
+        if(new Date().getTime() - docs[i].time < 43200000) {
+          console.log('está activo');
+        }else {
+          dbs.collection('usuarios', function(err,collection){
+          doc = {"time": docs[i].time};
+          collection.remove(doc, function(){});
+          });
+        }
+        
+      }
+    });
+  }
 
 
 
@@ -76,7 +97,7 @@ stream.stream();
     recent_messages = [],
     ultimoMensaje = null,
     ultimoEmisor = null,
-
+    tweets = [],
     i = -1;
 
 
@@ -121,8 +142,7 @@ stream.stream();
         });
 
       socket.on('hello', function() {
-        console.log('enviando pong' + ultimoMensaje)
-        socket.emit('pong', ultimoEmisor, ultimoMensaje);
+        socket.emit('pong', tweets);
         online();
       });
 
@@ -192,14 +212,6 @@ stream.stream();
         });
 
       });
-  //});
-
-function sendTweet(count, tweet) {
-  socket.broadcast.emit('pongTweet', count, tweet);
-  //socket.broadcast.emit('nicknames', nicknames);
-  online();
-}
-
 
 function save(nickdata, endpoint) {
 
