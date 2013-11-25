@@ -1,6 +1,6 @@
 
 ## Prerequisites 
-You will need to have node.js and npm installed.
+You will need to have node.js and npm installed. Also you need to run a mongo for the database.
 
 
 ## Installing ChatFox
