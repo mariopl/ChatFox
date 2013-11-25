@@ -112,13 +112,10 @@
 
   socket.on('reconnect', function () {
     location.reload(true);
-    alert('No internet connection')
-    
   });
 
   socket.on('reconnecting', function () {
     location.reload(true);
-    alert('No internet connection')
     $('#send-message').css('visibility', 'hidden');
   });
 
