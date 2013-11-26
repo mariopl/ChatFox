@@ -26,6 +26,7 @@ var socket = io.connect('http://localhost:8443');
    if (!localStorage.lastPush) {
 
     localStorage.lastPush = 0;
+   }
 
 
   });
