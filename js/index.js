@@ -10,6 +10,22 @@
     }
   });
 
+    $(function () {
+
+   if (!localStorage.messagesReceived) {
+
+    localStorage.messagesReceived = 0;
+
+   }
+
+   if (!localStorage.notificationsReceived) {
+
+    localStorage.notificationsReceived = 0;
+
+   }
+
+  });
+
 
   var socket = io.connect('http://localhost:8443');
 
@@ -26,7 +42,7 @@
   });
 
   socket.on('pong', function (tweets) {
-    setTimeout('hello()', 300000);
+    setTimeout('hello()', 60000);
     if(new Date().getTime() - activity > 43200000 && activity != 'new') {
       localStorage.nick = '';
       $('#set-nickname').css('visibility', 'visible');
@@ -49,24 +65,19 @@
         $('#lines').append($('<p>').append($('<b>').text(var1), var2));
         lastMsg = localStorage.lastMsg = var2;
         $(function() {
-          if(navigator.push){
-            if (!localStorage.messagesReceived) {
-              localStorage.messagesReceived = 1;
-            } else if (localStorage.messagesReceived) {
-              localStorage.messagesReceived++;
-            }    
+            if (localStorage.messagesReceived) {
+              localStorage.messagesReceived++;  
+            }
+      
             if (navigator.push && document.hidden){
-              if (!localStorage.notificationsReceived) {
-                localStorage.notificationsReceived = 1;
-              } else if (localStorage.notificationsReceived) {
-                localStorage.notificationsReceived++;
+              if (localStorage.notificationsReceived) {
+                localStorage.notificationsReceived++;  
               }
               
               var notification = navigator.mozNotification.createNotification(var1, var2);
               
               notification.show();
             }           
-          }
         });       
       } else {
         console.log('else')
@@ -133,15 +144,11 @@
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
     $('#lines').get(0).scrollTop = 10000000;
     
-    if (!localStorage.messagesReceived) {
-      localStorage.messagesReceived = 1;
-    } else if (localStorage.messagesReceived) {
-      localStorage.messagesReceived++;
+    if (localStorage.messagesReceived) {
+      localStorage.messagesReceived++;   
     }    
     if (navigator.push && document.hidden){
-      if (!localStorage.notificationsReceived) {
-        localStorage.notificationsReceived = 1;
-      } else if (localStorage.notificationsReceived) {
+      if (localStorage.notificationsReceived) {
         localStorage.notificationsReceived++;
       }
       

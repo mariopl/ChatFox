@@ -9,21 +9,33 @@ var Push = (function() {
 var endpoint = localStorage.endpoint || null;
 var socket = io.connect('http://localhost:8443');
 
+  $(function () {
+
+   if (!localStorage.messagesReceived) {
+
+    localStorage.messagesReceived = 0;
+
+   }
+
+   if (!localStorage.notificationsReceived) {
+
+    localStorage.notificationsReceived = 0;
+
+   }
+
+  });
+
 socket.emit('hello');
 
 console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
 
 if (navigator.push) {
   if(document.hidden) {
-    if (!localStorage.notificationsReceived) {
-      localStorage.notificationsReceived = 1;
-    } else if (localStorage.notificationsReceived) {
-      localStorage.notificationsReceived++;
+    if (localStorage.notificationsReceived) {
+      localStorage.notificationsReceived++;  
     }
-    if (!localStorage.messagesReceived) {
-      localStorage.messagesReceived = 1;
-    } else if (localStorage.messagesReceived) {
-      localStorage.messagesReceived++;
+    if (localStorage.messagesReceived) {
+      localStorage.messagesReceived++;  
     }   
     var notification = navigator.mozNotification.createNotification('Chatfox', 'Nuevo Mensaje'); 
     notification.show();
