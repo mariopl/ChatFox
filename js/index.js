@@ -131,8 +131,7 @@
   });
 
   socket.on('error', function (e) {
-    alert('No internet connection')
-    location.reload(true); 
+    location.reload(true);
   });
 
   socket.on('button enabled', function() {
