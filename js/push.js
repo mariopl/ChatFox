@@ -35,8 +35,9 @@ socket.emit('hello');
 
 console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
 
-if(new Date().getTime() - lastPush < 10000)
 if (navigator.push) {
+  var last = localStorage.lastPush;
+  if(new Date().getTime() - last > 10000) {
   if(document.hidden) {
     if (localStorage.notificationsReceived) {
       localStorage.notificationsReceived++;  
@@ -50,6 +51,7 @@ if (navigator.push) {
     var notification = navigator.mozNotification.createNotification('Chatfox', 'Nuevo Mensaje'); 
     notification.show();
   }   
+  }
 
   window.navigator.mozSetMessageHandler('push-register', function() {
     navigator.push.unregister(endpoint);
@@ -68,6 +70,7 @@ if (navigator.push) {
    }
  });
 }
+
 
 if(!endpoint){
   if (navigator.push) {
