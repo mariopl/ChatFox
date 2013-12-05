@@ -36,7 +36,6 @@ var lastMsg = localStorage.lastMsg;
 var activity = localStorage.activity = new Date().getTime();
 var atweet = localStorage.atweet;
 var endpoint = localStorage.endpoint;
-var autoendpoint = localStorage.autoendpoint;
 
 
 socket.on('connect', function () {
@@ -91,23 +90,18 @@ $('#send-message').submit(function () {
 		clear(); 
 		return;
 	}
-	if(!($('#message').val() == "endpoint")) {
-		message('me', $('#message').val());
-		ultimoMensajeRecibido = localStorage.ultimoMensaje = $('#message').val();
-		socket.emit('user message', $('#message').val());
-		activity = new Date().getTime();
-		localStorage.messagesReceived--
-		clear();
-		$('#lines').get(0).scrollTop = 10000000;
-		$('#message').blur();
-		return false;
 
-	} else {
-		alert('Tu endpoint es: ' + endpoint);
-		clear();
-		$('#lines').get(0).scrollTop = 10000000;
-		return false;
-	} 
+	message('me', $('#message').val());
+	ultimoMensajeRecibido = localStorage.ultimoMensaje = $('#message').val();
+	socket.emit('user message', $('#message').val());
+	activity = new Date().getTime();
+	localStorage.messagesReceived--
+	clear();
+	$('#lines').get(0).scrollTop = 10000000;
+	$('#message').blur();
+	return false;
+
+	
 });
 
 function message (from, msg) {
@@ -167,6 +161,12 @@ document.querySelector('#autoping').addEventListener ('click', function () {
 document.querySelector('#btn-statistics').addEventListener ('click', function () {
 
 	alert('Messages received: ' +  localStorage.messagesReceived + '\n\nNotifications received: ' + localStorage.notificationsReceived);
+
+});
+
+document.querySelector('#endpoint').addEventListener ('click', function () {
+
+	alert('Tu endpoint es: ' + localStorage.endpoint + '\n\n' + 'Tu autoendpoint es: ' + localStorage.autoendpoint);
 
 });
 

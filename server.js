@@ -53,7 +53,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
 					}, function (error, response, body) {
 						if(response && response.statusCode == 200){
 							console.log(body);
-							console.log('NOTIFICACION ENVIADA: EMISOR: ' + '@' + count + ' MENSAJE: ' + tweet);
+							console.log('NOTIFICACION ENVIADA --> EMISOR: ' + '@' + count + ' MENSAJE: ' + tweet);
 						} else {
 							console.log(error);
 							console.log(body);
@@ -145,15 +145,16 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
     	});
 
 		socket.on('ping', function() {
+			var now = new Date().getTime();
 			if(socket.autoendpoint == null){}
 				else{ 
 					request.put({
 						url: socket.autoendpoint,
-						body: "version=" + new Date().getTime()
+						body: "version=" + now
 					}, function (error, response, body) {
 						if(response && response.statusCode == 200){
 							console.log(body);
-							console.log('NOTIFICACION PING ENVIADA: EMISOR: ' + socket.nickname);
+							console.log('NOTIFICACION PING ENVIADA --> EMISOR: ' + socket.nickname + ' MENSAJE: version = ' + now);
 						} else {
 							console.log(error);
 							console.log(body);
@@ -206,7 +207,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
             			}, function (error, response, body) {
             				if(response && response.statusCode == 200){
             					console.log(body);
-            					console.log('NOTIFICACION ENVIADA: EMISOR: ' + issuing + ' MENSAJE: ' + msg);
+            					console.log('NOTIFICACION ENVIADA --> EMISOR: ' + issuing + ' MENSAJE: ' + msg);
             				} else {
             					console.log(error);
             					console.log(body);
