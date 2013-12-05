@@ -141,6 +141,10 @@ body {
   right: 0;
 }
 
+#offline {
+  visibility: hidden;
+}
+
 section[data-position="right"] {
   position: absolute;
   top: 0;

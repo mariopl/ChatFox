@@ -6,7 +6,6 @@
   "dependencies": {
     "socket.io": "*",
     "node-static": "*",
-    "mongoose":"*",
     "request": "*",
     "user-stream": "*",
     "mongodb": "*"

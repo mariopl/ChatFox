@@ -1,21 +1,12 @@
-/*
-Class that will allow us to register for push 
-and register in push server
-*/
-console.log('PUSH.JS   dentro de push.js');
+var Push = (function() {        
 
-var Push = (function() {	
 //Now we call push.register() to request an endpoint
-var endpoint = localStorage.endpoint || null;
-var socket = io.connect('http://localhost:8443');
+    var endpoint = localStorage.endpoint || null;
+    var autoendpoint = localStorage.autoendpoint || null;
+    var socket = io.connect('http://localhost:8443');
+
 
   $(function () {
-
-   if (!localStorage.messagesReceived) {
-
-    localStorage.messagesReceived = 0;
-
-   }
 
    if (!localStorage.notificationsReceived) {
 
@@ -23,74 +14,84 @@ var socket = io.connect('http://localhost:8443');
 
    }
 
-   if (!localStorage.lastPush) {
-
-    localStorage.lastPush = 0;
-   }
-
-
   });
+   
 
-socket.emit('hello');
+  if (navigator.push) {
+    window.navigator.mozSetMessageHandler('push', function(evt) {
+      console.log(autoendpoint);
+      console.log(evt.pushEndpoint);
 
-console.log('PUSH.JS    tu endpoint es: ' + endpoint); 
-
-if (navigator.push) {
-  var last = localStorage.lastPush;
-  if(new Date().getTime() - last > 10000) {
-  if(document.hidden) {
-    if (localStorage.notificationsReceived) {
+      if(autoendpoint == evt.pushEndpoint) {
+      var notification = navigator.mozNotification.createNotification('Ping', 'version = ' + evt.version);
+      notification.show();
       localStorage.notificationsReceived++;  
-    }
-    if (localStorage.messagesReceived) {
-      localStorage.messagesReceived++;  
-    } 
-    if (localStorage.lastPush) {
-      localStorage.lastPush = new Date().getTime();  
-    }     
-    var notification = navigator.mozNotification.createNotification('Chatfox', 'Nuevo Mensaje'); 
-    notification.show();
-  }   
+      }
+
+      if(endpoint == evt.pushEndpoint) {
+      socket.emit('last message');
+      socket.on('lmessage', function(var1, var2){
+      var notification2 = navigator.mozNotification.createNotification(var1, var2);
+      notification2.show();
+      localStorage.notificationsReceived++;  
+      socket.close();
+      });
+      }
+
+    });
+
+    window.navigator.mozSetMessageHandler('push-register', function() {
+
+      navigator.push.unregister(endpoint);
+
+      var req = navigator.push.register();
+
+      req.onsuccess = function(e) {
+        var endpoint = localStorage.endpoint = req.result;
+        var socket = io.connect('http://localhost:8443');
+        socket.emit('new endpoint', endpoint);
+        console.log('PUSH-REGISTER: nuevo endpoint --> ' + endpoint);
+      }
+
+      req.onerror = function(e) {
+       console.log('PUSH-REGISTER: error --> ' + JSON.stringify(e));
+     }
+    });
   }
 
-  window.navigator.mozSetMessageHandler('push-register', function() {
-    navigator.push.unregister(endpoint);
+  if(!endpoint){
+    if (navigator.push) {
+      var req = navigator.push.register();
+      var req2 = navigator.push.register();
 
-    var req = navigator.push.register();
+      req.onsuccess = function(e) {
+        endpoint = localStorage.endpoint = req.result;
+        socket.emit('user endpoint', endpoint);
+        console.log('PUSH: nuevo endpoint --> ' + endpoint);
 
-    console.log('PUSH.JS     solicitando nuevo registro de endpoint desde push-register')
-    req.onsuccess = function(e) {
-      endpoint = localStorage.endpoint = req.result;  
-      socket.emit('new endpoint', endpoint);
-      console.log('PUSH.JS    tu nuevo endpoint es: ' + endpoint); 
-    }
-    
-    req.onerror = function(e) {
-     alert("Error getting a new endpoint: " + JSON.stringify(e));
+      }
+
+      req.onerror = function(e) {
+       console.log('PUSH: error endpoint--> ' + JSON.stringify(e));
+      }
+
+      req2.onsuccess = function(e) {
+        autoendpoint = localStorage.autoendpoint = req2.result;
+        socket.emit('user autoendpoint', autoendpoint);
+        console.log('PUSH: nuevo autoendpoint --> ' + endpoint);
+
+      }
+
+      req2.onerror = function(e) {
+       console.log("Error getting a new autoendpoint: " + JSON.stringify(e));
+       console.log('PUSH: error autoendpoint--> ' + JSON.stringify(e));
+      }
    }
- });
-}
-
-
-if(!endpoint){
-  if (navigator.push) {
-    console.log('PUSH.JS    solicitando registro de endpoint')
-    var req = navigator.push.register();
-    
-    req.onsuccess = function(e) {
-     var endpoint = localStorage.endpoint = req.result;
-     socket.emit('user endpoint', endpoint); 
-     console.log('---------CHATFOX-------- Endpoint registrado: ' + endpoint);
-   }
-
-   req.onerror = function(e) {
-     alert("Error getting a new endpoint: " + JSON.stringify(e));
-     console.log('---------CHATFOX-------- Error getting the endpoint');
-   }
- } 
-} else {
+ } else {
+  autoendpoint = localStorage.autoendpoint;
   endpoint = localStorage.endpoint;
   socket.emit('user endpoint', endpoint);
-  
+  socket.emit('user autoendpoint', autoendpoint);
+
 }
 })();
