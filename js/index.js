@@ -5,7 +5,7 @@ $(function() {
 
 		} else {
 			navigator.mozApps
-			.install('http://84.76.87.25:443/manifest.webapp');
+			.install('http://localhost:443/manifest.webapp');
 		}
 	}
 });
@@ -28,7 +28,7 @@ $(function () {
 	}
 });
 
-var socket = io.connect('http://84.76.87.25:443');
+var socket = io.connect('http://localhost:443');
 var nick = localStorage.nick || null;
 var ultimoEmisorRecibido = localStorage.ultimoEmisor;
 var ultimoMensajeRecibido = localStorage.ultimoMensaje;
