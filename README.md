@@ -14,4 +14,4 @@ Once ChatFox is installed, you can run it from the root directory.
 
 $node server.js
 
-## Open a browser with 'http://localhost:8443'
+## Open a browser with 'http://localhost:443'

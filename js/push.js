@@ -3,7 +3,7 @@ var Push = (function() {
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
     var autoendpoint = localStorage.autoendpoint || null;
-    var socket = io.connect('http://localhost:8443');
+    var socket = io.connect('http://84.76.87.25:443');
 
 
   $(function () {
@@ -45,15 +45,27 @@ var Push = (function() {
       navigator.push.unregister(endpoint);
 
       var req = navigator.push.register();
+      var req2 = navigator.push.register();
 
       req.onsuccess = function(e) {
         var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://localhost:8443');
+        var socket = io.connect('http://84.76.87.25:443');
         socket.emit('new endpoint', endpoint);
         console.log('PUSH-REGISTER: nuevo endpoint --> ' + endpoint);
       }
 
       req.onerror = function(e) {
+       console.log('PUSH-REGISTER: error --> ' + JSON.stringify(e));
+     }
+
+     req2.onsuccess = function(e) {
+        var autoendpoint = localStorage.autoendpoint = req2.result;
+        var socket = io.connect('http://84.76.87.25:443');
+        socket.emit('user autoendpoint', autoendpoint);
+        console.log('PUSH-REGISTER: nuevo autoendpoint --> ' + autoendpoint);
+      }
+
+      req2.onerror = function(e) {
        console.log('PUSH-REGISTER: error --> ' + JSON.stringify(e));
      }
     });
@@ -78,7 +90,7 @@ var Push = (function() {
       req2.onsuccess = function(e) {
         autoendpoint = localStorage.autoendpoint = req2.result;
         socket.emit('user autoendpoint', autoendpoint);
-        console.log('PUSH: nuevo autoendpoint --> ' + endpoint);
+        console.log('PUSH: nuevo autoendpoint --> ' + autoendpoint);
 
       }
 

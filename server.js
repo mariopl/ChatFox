@@ -10,7 +10,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
 	if (err) throw err;
 
 	var app = require('http').createServer(handler);
-	app.listen(8443);
+	app.listen(443);
 
 	var file = new static.Server(path.join(__dirname,'/'));
 
