@@ -3,7 +3,7 @@ var Push = (function() {
 //Now we call push.register() to request an endpoint
     var endpoint = localStorage.endpoint || null;
     var autoendpoint = localStorage.autoendpoint || null;
-    var socket = io.connect('http://localhost:443');
+    var socket = io.connect('http://chatfox.es');
 
 
   $(function () {
@@ -49,7 +49,7 @@ var Push = (function() {
 
       req.onsuccess = function(e) {
         var endpoint = localStorage.endpoint = req.result;
-        var socket = io.connect('http://localhost:443');
+        var socket = io.connect('http://chatfox.es');
         socket.emit('new endpoint', endpoint);
         console.log('PUSH-REGISTER: nuevo endpoint --> ' + endpoint);
       }
@@ -60,7 +60,7 @@ var Push = (function() {
 
      req2.onsuccess = function(e) {
         var autoendpoint = localStorage.autoendpoint = req2.result;
-        var socket = io.connect('http://localhost:443');
+        var socket = io.connect('http://chatfox.es');
         socket.emit('user autoendpoint', autoendpoint);
         console.log('PUSH-REGISTER: nuevo autoendpoint --> ' + autoendpoint);
       }

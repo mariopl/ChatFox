@@ -4,13 +4,14 @@ sio = require('socket.io'),
 static = require('node-static'),
 request = require('request'),
 Stream = require('user-stream'),
+time = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 MongoClient = require('mongodb').MongoClient
 
 MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
 	if (err) throw err;
 
 	var app = require('http').createServer(handler);
-	app.listen(443);
+	app.listen(80);
 
 	var file = new static.Server(path.join(__dirname,'/'));
 
@@ -29,7 +30,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
 	  access_token_key: '2182024027-3IPrwww5sT9sDuyMO1yErBEKyRC0XgghCSL3Wu9',
 	  access_token_secret: 'OLva8koa0Og6XV5HNzPEmDXqhNOds4QaaHL5oWLb6quUw'
 	});
-
+io.set('log level', 1);
 	stream.stream();
 
 	stream.on('data', function(json) {
@@ -53,7 +54,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
 					}, function (error, response, body) {
 						if(response && response.statusCode == 200){
 							console.log(body);
-							console.log('NOTIFICACION ENVIADA --> EMISOR: ' + '@' + count + ' MENSAJE: ' + tweet);
+							console.log(time + ' NOTIFICACION ENVIADA --> EMISOR: ' + '@' + count + ' MENSAJE: ' + tweet);
 						} else {
 							console.log(error);
 							console.log(body);
@@ -154,7 +155,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
 					}, function (error, response, body) {
 						if(response && response.statusCode == 200){
 							console.log(body);
-							console.log('NOTIFICACION PING ENVIADA --> EMISOR: ' + socket.nickname + ' MENSAJE: version = ' + now);
+							console.log(time + ' NOTIFICACION PING ENVIADA --> EMISOR: ' + socket.nickname + ' MENSAJE: version = ' + now);
 						} else {
 							console.log(error);
 							console.log(body);
@@ -207,7 +208,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
             			}, function (error, response, body) {
             				if(response && response.statusCode == 200){
             					console.log(body);
-            					console.log('NOTIFICACION ENVIADA --> EMISOR: ' + issuing + ' MENSAJE: ' + msg);
+            					console.log(time + ' NOTIFICACION ENVIADA --> EMISOR: ' + issuing + ' MENSAJE: ' + msg);
             				} else {
             					console.log(error);
             					console.log(body);
@@ -227,7 +228,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
     		.toArray(function(err, docs) {
     			var array = docs;
     			for (var i = 0; i < docs.length ; i++) {
-    				if(new Date().getTime() - docs[i].time < 43200000) {
+    				if(new Date().getTime() - docs[i].time < 86400000) {
     				}
     				else {
     					dbs.collection('usuarios', function(err,collection){

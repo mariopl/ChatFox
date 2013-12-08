@@ -5,7 +5,7 @@ $(function() {
 
 		} else {
 			navigator.mozApps
-			.install('http://localhost:443/manifest.webapp');
+			.install('http://chatfox.es/manifest.webapp');
 		}
 	}
 });
@@ -16,7 +16,7 @@ $(function () {
 		localStorage.messagesReceived = 0;
 	}
 
-	if(new Date().getTime() - activity > 43200000 && activity != 'new') {
+	if(new Date().getTime() - activity > 86400000 && activity != 'new') {
       localStorage.nick = '';
       $('#set-nickname').css('visibility', 'visible');
       alert('Your session has been closed')
@@ -28,7 +28,7 @@ $(function () {
 	}
 });
 
-var socket = io.connect('http://localhost:443');
+var socket = io.connect('http://chatfox.es');
 var nick = localStorage.nick || null;
 var ultimoEmisorRecibido = localStorage.ultimoEmisor;
 var ultimoMensajeRecibido = localStorage.ultimoMensaje;
@@ -209,7 +209,7 @@ socket.on('reconnect', function () {
 });
 
 socket.on('reconnecting', function () {
-	location.reload(true);
+	window.close();
 });
 
 socket.on('error', function (e) {
