@@ -4,7 +4,6 @@ sio = require('socket.io'),
 static = require('node-static'),
 request = require('request'),
 Stream = require('user-stream'),
-time = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 MongoClient = require('mongodb').MongoClient
 
 MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
@@ -53,6 +52,7 @@ io.set('log level', 1);
 						body:    "version=" + new Date().getTime()
 					}, function (error, response, body) {
 						if(response && response.statusCode == 200){
+							var time = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 							console.log(body);
 							console.log(time + ' NOTIFICACION ENVIADA --> EMISOR: ' + '@' + count + ' MENSAJE: ' + tweet);
 						} else {
@@ -154,6 +154,7 @@ io.set('log level', 1);
 						body: "version=" + now
 					}, function (error, response, body) {
 						if(response && response.statusCode == 200){
+							var time = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 							console.log(body);
 							console.log(time + ' NOTIFICACION PING ENVIADA --> EMISOR: ' + socket.nickname + ' MENSAJE: version = ' + now);
 						} else {
@@ -207,6 +208,7 @@ io.set('log level', 1);
             				body: "version=" + new Date().getTime()
             			}, function (error, response, body) {
             				if(response && response.statusCode == 200){
+            					var time = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
             					console.log(body);
             					console.log(time + ' NOTIFICACION ENVIADA --> EMISOR: ' + issuing + ' MENSAJE: ' + msg);
             				} else {
