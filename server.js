@@ -233,7 +233,7 @@ io.set('log level', 1);
     				if(new Date().getTime() - docs[i].time < 86400000) {
     				}
     				else {
-    					dbs.collection('usuarios', function(err,collection){
+    					db.collection('usuarios', function(err,collection){
     					doc = {"time": docs[i].time};
     					collection.remove(doc, function(){});
     					});
