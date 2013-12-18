@@ -8,10 +8,11 @@
     "node-static": "*",
     "request": "*",
     "user-stream": "*",
-    "mongodb": "*"
+    "mongodb": "*",
+    "validator": "*"
   },
   "engines": {
-    "node": "*"
+    "node": "0.8"
   },
   "scripts": {
     "start": "/server.js"

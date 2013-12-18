@@ -4,6 +4,8 @@ sio = require('socket.io'),
 static = require('node-static'),
 request = require('request'),
 Stream = require('user-stream'),
+sanitize = require('validator').sanitize,
+
 MongoClient = require('mongodb').MongoClient
 
 MongoClient.connect('mongodb://127.0.0.1:27017/cf', function(err, db) {
@@ -79,10 +81,11 @@ io.set('log level', 1);
 			}
 		}
 
-		socket.on('user message', function (msg) {
-			socket.broadcast.emit('user message', socket.nickname, msg);
-			recent_messages.push({nick: socket.nickname, msg: msg});
-			wakeUp(socket.endpoint, msg, socket.nickname);
+		socket.on('message_to_server', function (data) {
+			var escaped_message = sanitize(data["message"]).escape();
+			io.sockets.emit('message_to_client', socket.nickname, escaped_message);
+			recent_messages.push({nick: socket.nickname, msg: escaped_message});
+			wakeUp(socket.endpoint, escaped_message, socket.nickname);
 			updateTime(socket.nickname);
 			remove();
 			if (recent_messages.length > 8) {

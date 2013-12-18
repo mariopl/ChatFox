@@ -49,8 +49,9 @@ function login() {
 
 	if(!nick) {
 		$('#set-nickname').submit(function (ev) {
-			if(($('#nick').val() == "") || ($('#nick').val() == " ") || ($('#nick').val() == "  ") || ($('#nick').val() == "   ")
-				|| ($('#nick').val() == "    ") || ($('#nick').val() == "     ") || ($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null")|| ($('#nick').val() == "ChatFox")) {
+			if(($('#nick').val().contains(" ")) || ($('#nick').val().contains("<")) || ($('#nick').val() == " ") || 
+				($('#nick').val() == "me") || ($('#nick').val() == "null") || ($('#nick').val() == "Null")||
+				 ($('#nick').val() == "ChatFox")) {
 				alert('Please, write your nickname');
 			clearNickname();
 			return;
@@ -86,14 +87,14 @@ function login() {
 
 $('#send-message').submit(function () {
 	var endpoint = localStorage.endpoint || null;
-	if(($('#message').val() == "") ||($('#message').val() == " ") || ($('#message').val() == "  ") || ($('#message').val() == "   ") ) {
+	if(($('#message').val().contains("  ")) || ($('#message').val() == " ")) {
 		clear(); 
 		return;
 	}
 
-	message('me', $('#message').val());
 	ultimoMensajeRecibido = localStorage.ultimoMensaje = $('#message').val();
-	socket.emit('user message', $('#message').val());
+	var msg = $('#message').val();
+	socket.emit('message_to_server',{ message : $('#message').val()});
 	activity = new Date().getTime();
 	localStorage.messagesReceived--
 	clear();
@@ -103,14 +104,6 @@ $('#send-message').submit(function () {
 
 	
 });
-
-function message (from, msg) {
-	$('#lines').append($('<p>').append($('<b>').text(from), msg));
-	$('#lines').get(0).scrollTop = 10000000;
-	if (localStorage.messagesReceived) {
-		localStorage.messagesReceived++;   
-	}    
-}
 
 function clear () {
 	$('#message').val('').focus();
@@ -171,10 +164,10 @@ document.querySelector('#endpoint').addEventListener ('click', function () {
 });
 
 
-socket.on('announcement', function (nick, msg) {
-	$('#lines').append($('<p>').append($('<b>').text(nick), msg));
+socket.on('announcement', function (emisor, data) {
+	$('#lines').append($('<p>').append($('<b>').text(emisor), data));
 	$('#lines').get(0).scrollTop = 10000000;
-	lastMsg = localStorage.lastMsg = msg;
+	lastMsg = localStorage.lastMsg = data;
 });
 
 socket.on('nicknames', function (online) {
@@ -189,19 +182,15 @@ socket.on('nicknames', function (online) {
 	}
 });
 
-socket.on('nicknames', function (online) {
-    $('#nicknames').empty().append($('<span>Connected: </span>'));
-    $('#nicknamesView').empty();
-    for (var i in online) {
-      if (online[i] != undefined){
-        $('#nicknames').append($('<b>').text(online[i]));
-        $('#nicknamesView').append($('<li>').append($('<p>').text(online[i])));
-      }
 
-    }
-  });
-
-socket.on('user message', message);
+//socket.on('user message', message);
+socket.on("message_to_client", function(emisor, data) {
+	$('#lines').append($('<p>').append($('<b>').text(emisor), data));
+        $('#lines').get(0).scrollTop = 10000000;
+        if (localStorage.messagesReceived) {
+                localStorage.messagesReceived++;
+        } 
+});
 
 socket.on('reconnect', function () {
 	$('#lines').remove();
@@ -209,7 +198,7 @@ socket.on('reconnect', function () {
 });
 
 socket.on('reconnecting', function () {
-	window.close();
+	location.reload(true);
 });
 
 socket.on('error', function (e) {
