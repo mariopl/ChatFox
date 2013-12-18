@@ -125,6 +125,25 @@ function reinicio() {
 	location.reload(true);
 }
 
+function link() {
+	jQuery(document).ready(function(){
+     // Ejecutar esto cuando el div principal esté cargado
+     $('#lines').ready(function(){
+          // Navegar a través de cada div de contenido
+          $('.content').each(function(){
+               // Obtener el texto
+               var str = $(this).html();
+               // Regex para detectar los enlaces
+               var regex = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w\/_\.]*(\?\S+)?)?)?)/ig
+               // Reemplazar el texto plano por hiperenlaces
+               var replaced_text = str.replace(regex, "<a href='$1' target='_blank'>$1</a>");
+               // Mostrar el texto reemplazado
+               $(this).html(replaced_text);
+          });
+     });
+   });
+}
+
 document.querySelector('#btn-users').addEventListener ('click', function () {
 	document.querySelector('#users').className = 'current';
 	document.querySelector('[data-position="current"]').className = 'left';
@@ -168,6 +187,7 @@ socket.on('announcement', function (emisor, data) {
 	$('#lines').append($('<p>').append($('<b>').text(emisor), data));
 	$('#lines').get(0).scrollTop = 10000000;
 	lastMsg = localStorage.lastMsg = data;
+	link();
 });
 
 socket.on('nicknames', function (online) {
@@ -185,11 +205,13 @@ socket.on('nicknames', function (online) {
 
 //socket.on('user message', message);
 socket.on("message_to_client", function(emisor, data) {
+
 	$('#lines').append($('<p>').append($('<b>').text(emisor), data));
         $('#lines').get(0).scrollTop = 10000000;
         if (localStorage.messagesReceived) {
                 localStorage.messagesReceived++;
-        } 
+        }
+    link(); 
 });
 
 socket.on('reconnect', function () {
