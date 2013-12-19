@@ -5,7 +5,7 @@ $(function() {
 
 		} else {
 			navigator.mozApps
-			.install('http://localhost:8443/manifest.webapp');
+			.install('http://chatfox.es/manifest.webapp');
 		}
 	}
 });
@@ -28,7 +28,7 @@ $(function () {
 	}
 });
 
-var socket = io.connect('http://localhost:8443');
+var socket = io.connect('http://chatfox.es');
 var nick = localStorage.nick || null;
 var ultimoEmisorRecibido = localStorage.ultimoEmisor;
 var ultimoMensajeRecibido = localStorage.ultimoMensaje;
