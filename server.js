@@ -42,10 +42,10 @@ io.set('log level', 1);
 			recent_messages.push({nick: '@'+count, msg: tweet});
 			tweets.push({nick: '@'+count, msg: tweet});
 			if (tweets.length > 8) {
-				tweets = tweets.slice(tweets.length-8, tweets.length);
+				tweets = tweets.slice(tweets.length-20, tweets.length);
 			}
 			if (recent_messages.length > 8) {
-				recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
+				recent_messages = recent_messages.slice(recent_messages.length-20, recent_messages.length);
 			}	
 			var collection = db.collection('usuarios')
 			.find({} , {endpoint:1, _id:0})
