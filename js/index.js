@@ -223,7 +223,9 @@ socket.on('reconnect', function () {
 });
 
 socket.on('reconnecting', function () {
-	location.reload(true);
+	if (navigator.push) {
+		window.close();
+	}
 });
 
 socket.on('error', function (e) {
