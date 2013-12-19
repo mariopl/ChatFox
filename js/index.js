@@ -5,7 +5,7 @@ $(function() {
 
 		} else {
 			navigator.mozApps
-			.install('http://chatfox.es/manifest.webapp');
+			.install('http://localhost:8443/manifest.webapp');
 		}
 	}
 });
