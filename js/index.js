@@ -28,7 +28,7 @@ $(function () {
 	}
 });
 
-var socket = io.connect('http://chatfox.es');
+var socket = io.connect('http://localhost:8443');
 var nick = localStorage.nick || null;
 var ultimoEmisorRecibido = localStorage.ultimoEmisor;
 var ultimoMensajeRecibido = localStorage.ultimoMensaje;
@@ -188,6 +188,9 @@ socket.on('announcement', function (emisor, data) {
 	$('#lines').get(0).scrollTop = 10000000;
 	lastMsg = localStorage.lastMsg = data;
 	link();
+	if(!navigator.push) {
+		setTimeout('reinicio()', 60000);
+	}
 });
 
 socket.on('nicknames', function (online) {
@@ -254,7 +257,4 @@ socket.on('pong', function (tweets) {
     
  
 });
-
-
-
 
