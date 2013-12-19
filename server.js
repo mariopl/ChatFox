@@ -40,10 +40,13 @@ io.set('log level', 1);
 			count = (json.user && json.user.screen_name) || 'Message from Twitter';
 			ultimoEmisor = '@'+count;
 			recent_messages.push({nick: '@'+count, msg: tweet});
+			tweets.push({nick: '@'+count, msg: tweet});
 			if (tweets.length > 8) {
 				tweets = tweets.slice(tweets.length-8, tweets.length);
 			}
-			tweets.push({nick: '@'+count, msg: tweet});
+			if (recent_messages.length > 8) {
+				recent_messages = recent_messages.slice(recent_messages.length-8, recent_messages.length);
+			}	
 			var collection = db.collection('usuarios')
 			.find({} , {endpoint:1, _id:0})
 			.toArray(function(err, docs) {
