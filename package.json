@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "author": "Mario Pierre-Louis Marín",
   "dependencies": {
-    "socket.io": "*",
+    "socket.io": "0.9.x",
     "node-static": "*",
     "request": "*",
     "user-stream": "*",
